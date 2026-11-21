@@ -89,7 +89,14 @@
     background:transparent; border:none; color:var(--text); font-family:inherit; font-size:13px;
     padding:7px 4px; width:100%; text-align:right;
   }
-  .field select{ text-align:left; }
+  .field select{ text-align:left; height:29px; padding-top:0; padding-bottom:0; }
+  /* "Choose" reads as a placeholder, like the empty boxes beside it. */
+  .field select:has(option[value=""]:checked){ color:var(--text-faint); }
+  .field select option{ color:var(--text); }
+  /* Keeps the "i" on the same line as the last word of its label. */
+  .tip-nb{ white-space:nowrap; }
+  .field input::placeholder{ font-family:var(--serif); font-size:11.5px; color:var(--text-faint); opacity:1; }
+  html.phone .field input::placeholder{ font-size:13px; }
   .field input:focus, .field select:focus{ outline:none; }
   /* Highlights a field that fell back to a generic default because the AI
      research prompt found no asset-specific figure for it (e.g. peak
@@ -670,6 +677,27 @@
   .method-formula{ font-family:var(--mono); font-size:12.5px; color:var(--text); background:var(--panel-alt); border:1px solid var(--border); border-radius:4px; padding:10px 12px; margin:8px 0; line-height:1.6; overflow-x:auto; }
   .debt-note{ border:1px solid rgba(251,139,30,0.45); background:rgba(251,139,30,0.07); border-radius:4px; padding:10px 14px; margin:0 0 12px; font-size:13px; line-height:1.55; color:var(--text-dim); }
   .debt-note b{ color:var(--orange); }
+  /* ---------- Pipeline table: one box size, flags drawn on the box itself ---------- */
+  #pipelineTable{ table-layout:fixed; }
+  #pipelineTable thead th:nth-child(1){ width:44px; }
+  #pipelineTable thead th:nth-child(2){ width:20%; }
+  #pipelineTable thead th:nth-child(3){ width:15%; }
+  #pipelineTable thead th:nth-child(4), #pipelineTable thead th:nth-child(5), #pipelineTable thead th:nth-child(6){ width:11.5%; }
+  #pipelineTable thead th:nth-child(7), #pipelineTable thead th:nth-child(8){ width:11%; }
+  #pipelineTable thead th:nth-child(9){ width:84px; }
+  #pipelineTable thead th:nth-child(n+4):nth-child(-n+8){ text-align:right; }
+  #assetsBody tr[data-id] > td:nth-child(4){ text-align:right; }
+  #assetsBody tr[data-id] > td{ vertical-align:middle; }
+  #assetsBody tr[data-id] input[type="text"], #assetsBody tr[data-id] input[type="number"], #assetsBody tr[data-id] select{
+    width:100%; height:30px; box-sizing:border-box; margin:0; }
+  #assetsBody tr[data-id] input.name-in{ width:100%; }
+  #assetsBody tr[data-id] td.flagged-cell:not(.out-cell){ outline:none; background:none; }
+  #assetsBody tr[data-id] td.flagged-cell.flag-default:not(.out-cell) input, #assetsBody tr[data-id] td.flagged-cell:not(.flag-estimate):not(.out-cell) input{
+    border:1px dashed var(--red); background:rgba(255,67,61,0.06); }
+  #assetsBody tr[data-id] td.flagged-cell.flag-estimate:not(.out-cell) input{ border:1px dashed var(--blue); background:rgba(0,104,255,0.08); }
+  #assetsBody .row-actions{ justify-content:flex-end; }
+  /* A result that cannot be worked out yet: red text, no frame, so it stays inside the row. */
+  #assetsBody tr[data-id] td.out-cell.flagged-cell{ outline:none !important; background:none !important; color:var(--red); }
   /* =================================================================
      PHONE VIEW: layout and styling only (html.phone). Same inputs, same
      functions, same calculations as the desktop view. On a wide screen it
@@ -685,6 +713,10 @@
   html.phone .sim-banner{ max-width:404px !important; font-size:12.5px; padding:10px 12px; margin-top:14px !important; }
   html.phone .wrap{ padding:14px 14px 90px; }
   html.phone .topbar-inner{ padding:0 14px 8px; gap:8px; }
+  /* Phone header: brand on the left, view switch on the right. Methodology and the disclaimer stay linked from the footer. */
+  html.phone .topbar-inner{ flex-wrap:nowrap; align-items:center; }
+  html.phone .topbar-link{ display:none; }
+  html.phone .topbar-nav{ margin-left:auto; flex-shrink:0; }
   html.phone .brand .sub{ display:none; }
   html.phone .brand .mark{ font-size:15px; }
   html.phone .topbar-nav{ gap:10px; }
@@ -706,6 +738,9 @@
   /* Bigger touch targets on every input. */
   html.phone input[type="number"], html.phone input[type="text"], html.phone select, html.phone textarea{ font-size:16px !important; min-height:42px; }
   html.phone .field-row input, html.phone .field-row select{ width:100%; }
+  /* Company figures and model settings share one 4-column grid, so their boxes line up across both panels. */
+  .input-grid.cols-4{ grid-template-columns:repeat(4, minmax(0,1fr)); }
+  @media (max-width:760px){ .input-grid.cols-4{ grid-template-columns:repeat(2, minmax(0,1fr)); } }
   html.phone .input-grid{ grid-template-columns:repeat(2, minmax(0,1fr)) !important; gap:14px 12px; padding:14px; }
   html.phone .field label{ font-size:12.5px; }
   html.phone .paste-actions{ flex-wrap:wrap; }
@@ -739,13 +774,13 @@
   html.phone #assetsBody tr[data-id] > td:nth-child(7)::before{ content:"Peak sales"; }
   html.phone #assetsBody tr[data-id] > td:nth-child(8)::before{ content:"Lifetime revenue"; }
   html.phone #assetsBody tr[data-id] > td input, html.phone #assetsBody tr[data-id] > td select{ width:100% !important; max-width:none !important; }
-  html.phone #assetsBody tr[data-id] > td.flagged-cell{ padding:6px !important; border-radius:4px; }
   html.phone #assetsBody tr[data-id] > td.out-cell{ font-size:16px; padding-top:2px !important; }
   html.phone #assetsBody .name-in{ font-weight:600; }
   html.phone #assetsBody .toggle{ width:22px; height:22px; }
   html.phone #assetsBody .row-actions{ gap:8px; }
   html.phone #assetsBody .icon-btn{ width:40px; height:40px; font-size:15px; }
   html.phone #assetsBody tr.drawer-row{ display:block; }
+  html.phone #assetsBody tr[data-id] > td:nth-child(9) .row-actions{ justify-content:flex-end; }
   html.phone #assetsBody tr.drawer-row > td{ display:block; padding:0 12px 14px !important; }
   html.phone .drawer-grid{ grid-template-columns:repeat(2, minmax(0,1fr)) !important; }
   html.phone .drawer-inner canvas{ max-width:100%; }
@@ -770,6 +805,64 @@
 
   /* Drug by Drug table becomes cards too. */
   html.phone #rnpvBreakdown .table-scroll{ overflow:visible; }
+  /* ---------- Phone: fold long explanations ---------- */
+  .ph-fold-btn, .ph-short, .ph-more{ display:none; }
+  html.phone .ph-fold-btn{ display:flex; align-items:center; gap:6px; width:100%; margin:8px 0 0; padding:8px 2px; min-height:34px;
+    background:none; border:0; color:var(--text-dim); font:500 13px/1.3 var(--serif); text-align:left; cursor:pointer; }
+  html.phone .ph-fold-btn::before{ content:""; width:0; height:0; border-left:5px solid currentColor; border-top:4px solid transparent; border-bottom:4px solid transparent; transition:transform .15s ease; flex:0 0 auto; }
+  html.phone .ph-fold-btn[aria-expanded="true"]::before{ transform:rotate(90deg); }
+  html.phone .ph-fold-btn:hover{ color:var(--text); }
+  html.phone .ph-fold:not(.ph-open){ display:none !important; }
+  html.phone .ph-fold.ph-open{ margin-top:2px; }
+  html.phone .chart-block .ph-fold-btn{ margin:2px 0 4px; padding:4px 2px; min-height:30px; }
+  html.phone .ph-trunc:not(.ph-open) .ph-rest{ display:none; }
+  html.phone .ph-trunc:not(.ph-open) .ph-short{ display:inline; }
+  html.phone .ph-more{ display:inline; padding:0 2px; margin:0; background:none; border:0; color:var(--text); font:inherit; text-decoration:underline; text-underline-offset:2px; cursor:pointer; }
+  html.phone .sim-banner{ font-size:13px; }
+  html.phone .debt-note{ padding:10px 12px; }
+
+  /* ---------- Phone: lighter inputs area ---------- */
+  html.phone .module{ margin-top:24px; }
+  html.phone .flag-legend{ gap:4px; font-size:12px; }
+  html.phone #pasteResearchText{ min-height:110px !important; }
+  html.phone #promptModule .panel-body{ padding-bottom:14px; }
+
+
+  /* Phone: ticker and Copy prompt share a row; the prompt text folds below them. */
+  html.phone .prompt-panel{ position:relative; display:grid; grid-template-columns:minmax(0,1fr) auto; column-gap:10px; align-items:end; padding:14px; }
+  html.phone .prompt-panel > .input-grid{ padding:0 !important; grid-column:1; grid-row:1; }
+  html.phone .prompt-panel > .panel-body{ display:contents; }
+  html.phone .prompt-panel > .panel-body > div{ grid-column:2; grid-row:1; margin-top:0 !important; }
+  html.phone .prompt-panel > .panel-body > .ph-fold-btn{ grid-column:1 / -1; grid-row:2; }
+  html.phone .prompt-panel > .panel-body > textarea{ grid-column:1 / -1; grid-row:3; }
+  html.phone .prompt-panel #copyPromptBtn{ padding:0 16px; }
+  html.phone .prompt-panel > .panel-body > div{ position:relative; }
+  html.phone .prompt-panel #copyStatus{ position:absolute; right:0; top:100%; margin-top:6px !important; white-space:nowrap; font-size:12px; }
+  /* Folded prompt stays in the page (zero height, not display:none) so the copy fallback can still select it. */
+  html.phone #promptText.ph-fold:not(.ph-open){ display:block !important; position:absolute; left:0; top:0; width:1px !important; height:1px !important; min-height:0 !important;
+    padding:0 !important; border:0 !important; opacity:0; pointer-events:none; overflow:hidden; resize:none; }
+  html.phone #promptToggle{ text-align:left; gap:12px; }
+  html.phone .prompt-panel > .input-grid{ grid-template-columns:minmax(0,1fr) !important; }
+  /* Phone: drug details stay two per row even when a field is flagged; labels get room for two lines so boxes line up. */
+  html.phone .drawer-grid .field.flagged-default, html.phone .drawer-grid .field.flagged-estimate{ grid-column:auto; }
+  html.phone .drawer-grid{ gap:12px 10px; }
+  html.phone .drawer-grid .field label{ min-height:2.7em; display:flex; align-items:flex-end; font-size:12px; line-height:1.35; }
+  html.phone .drawer-grid .flag-note{ font-size:11px; }
+  html.phone .drawer-note{ font-size:12.5px; }
+
+  /* Phone: same rule on the cards: every box the same height, no extra padding around flagged ones. */
+  html.phone #assetsBody tr[data-id] input[type="text"], html.phone #assetsBody tr[data-id] input[type="number"], html.phone #assetsBody tr[data-id] select{ height:42px; min-height:42px; }
+  html.phone #assetsBody tr[data-id] > td:nth-child(4){ text-align:left !important; }
+  /* ---------- Phone: compact drug cards ---------- */
+  html.phone #assetsBody tr[data-id]{ grid-template-columns:28px minmax(0,1fr) 28px minmax(0,1fr) !important;
+    grid-template-areas:"on name name act" "phase phase mon mon" "pat pat price price" "peak peak life life" !important;
+    gap:8px 10px !important; padding:12px 10px !important; }
+  html.phone #assetsBody tr[data-id] > td:nth-child(n+3):nth-child(-n+8)::before{ font-size:11px; margin-bottom:3px; }
+  html.phone #assetsBody tr[data-id] > td:nth-child(6)::before{ content:"Months to catalyst"; }
+  html.phone #assetsBody tr[data-id] > td.out-cell{ font-size:15px; }
+  html.phone #assetsBody .icon-btn{ width:36px; height:36px; }
+  html.phone #assetsBody tr[data-id] input, html.phone #assetsBody tr[data-id] select{ min-height:40px; }
+
   html.phone #rnpvBreakdown table.assets, html.phone #rnpvBreakdown tbody{ display:block; width:100%; }
   html.phone #rnpvBreakdown thead{ display:none; }
   html.phone #rnpvBreakdown tbody tr{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:8px 14px; padding:12px 0; border-bottom:1px solid var(--border); }
@@ -797,6 +890,27 @@
   html.phone .jump-pill.show{ display:inline-flex; position:fixed; bottom:max(16px, env(safe-area-inset-bottom)); left:50%; transform:translateX(-50%); z-index:60;
     align-items:center; gap:6px; padding:11px 18px; border-radius:999px; border:1px solid rgba(0,104,255,0.6); background:#0b1830; color:var(--text);
     font-family:var(--serif); font-size:14px; box-shadow:0 6px 20px rgba(0,0,0,0.45); cursor:pointer; }
+  /* Hover explanations */
+  .tip-i{ display:inline-flex; align-items:center; justify-content:center; width:9px; height:9px; margin-left:2px; padding:0;
+    border:1px solid var(--border-strong); border-radius:50%; background:transparent; color:var(--text-faint); opacity:.8;
+    font:600 6px/1 var(--serif); font-style:normal; text-transform:none; letter-spacing:0;
+    vertical-align:top; position:relative; top:2px; cursor:help; }
+  .tip-i:hover, .tip-i:focus-visible, [data-tip]:hover > .tip-i{ color:var(--text); border-color:var(--text-dim); }
+  .tip-i:focus-visible{ outline:2px solid var(--blue-text); outline-offset:1px; }
+  label[data-tip], th[data-tip]{ cursor:help; }
+  .tip-i + .opt{ margin-left:3px; }
+  #tipBubble{ position:fixed; z-index:1000; left:0; top:0; max-width:300px; padding:9px 11px;
+    background:var(--panel-raised); border:1px solid var(--border-strong); border-radius:6px; box-shadow:0 6px 20px rgba(0,0,0,0.45);
+    color:var(--text); font:400 12px/1.5 var(--serif); letter-spacing:0; text-transform:none; text-align:left;
+    pointer-events:none; opacity:0; visibility:hidden; transition:opacity .12s ease, visibility 0s linear .12s; }
+  #tipBubble.show{ opacity:1; visibility:visible; transition:opacity .12s ease; }
+  .tip-i:hover, .tip-i:focus-visible, [data-tip]:hover > .tip-i{ opacity:1; }
+  /* Small to the eye on phones, but a larger invisible tap area around it. */
+  html.phone .tip-i{ width:10px; height:10px; font-size:6.5px; margin-left:2px; }
+  html.phone .tip-i::after{ content:""; position:absolute; inset:-10px; }
+  html.phone #tipBubble{ font-size:13px; }
+  @media (prefers-reduced-motion: reduce){ #tipBubble{ transition:none; } }
+  .field label .opt{ color:var(--text-faint); font-weight:400; }
   .topbar-link{ color:var(--text-dim); font-size:13px; text-decoration:none; }
   .topbar-link:hover{ color:var(--text); text-decoration:underline; }
   .sim-banner a, footer a{ color:var(--text); text-decoration:underline; text-underline-offset:2px; }
@@ -824,7 +938,7 @@
   </div>
   <div class="tabstrip-wrap" id="tabStripWrap"><div class="tabstrip" id="tabStrip" role="tablist" aria-label="Open analyses"></div></div>
 </header>
-<div class="sim-banner" id="simBanner" style="max-width:1144px; width:calc(100% - 36px); margin-left:auto; margin-right:auto;"><b>A simulator, not a forecast.</b> Every number is an input you control. The charts show what would happen to the business under those inputs, assuming each drug either reaches the market or fails. AI-suggested figures are a convenience for filling in the form, not our estimates. Nothing here is a prediction, a valuation or investment advice. <a href="#legal" data-open-legal>Read the full disclaimer</a>.</div>
+<div class="sim-banner ph-trunc" id="simBanner" style="max-width:1144px; width:calc(100% - 36px); margin-left:auto; margin-right:auto;"><b>A simulator, not a forecast.</b><span class="ph-short"> Not investment advice.</span><span class="ph-rest"> Every number is an input you control. The charts show what would happen to the business under those inputs, assuming each drug either reaches the market or fails. AI-suggested figures are a convenience for filling in the form, not our estimates. Nothing here is a prediction, a valuation or investment advice. <a href="#legal" data-open-legal>Read the full disclaimer</a>.</span> <button type="button" class="ph-more" aria-expanded="false">More</button></div>
 
 <button type="button" class="jump-pill" id="jumpPill"></button>
 <div class="wrap" id="pageDashboard">
@@ -838,12 +952,12 @@
     </button>
     <div class="accordion-body" id="promptBody"><div>
       <p class="module-desc" style="margin:10px 2px 10px;">Copy the prompt into any AI assistant with web search, then paste its answer back to pre-fill the form. AI answers can be inaccurate or out of date, so treat them as suggestions to verify and change.</p>
-      <div class="panel">
+      <div class="panel prompt-panel">
         <div class="input-grid" style="grid-template-columns:1fr;">
-          <div class="field"><label>Ticker</label><div class="field-row"><input type="text" id="promptTicker" placeholder="e.g. ANDY" style="text-align:left;"></div></div>
+          <div class="field"><label for="promptTicker">Ticker</label><div class="field-row"><input type="text" id="promptTicker" placeholder="e.g. ANDY" style="text-align:left;"></div></div>
         </div>
         <div class="panel-body" style="padding-top:0;">
-          <textarea id="promptText" readonly class="prose" style="width:100%; min-height:280px; background:var(--panel-alt); border:1px solid var(--border); border-radius:4px; color:var(--text-dim); font-size:12px; line-height:1.6; padding:12px; resize:vertical;"></textarea>
+          <textarea id="promptText" data-ph-fold="Show the prompt" aria-label="Prompt to copy into an AI assistant" readonly class="prose" style="width:100%; min-height:280px; background:var(--panel-alt); border:1px solid var(--border); border-radius:4px; color:var(--text-dim); font-size:12px; line-height:1.6; padding:12px; resize:vertical;"></textarea>
           <div style="display:flex; align-items:center; gap:10px; margin-top:10px;">
             <button class="btn primary" id="copyPromptBtn">Copy prompt</button>
             <span id="copyStatus" class="disclaimer-note" style="margin:0;"></span>
@@ -854,7 +968,7 @@
       <p class="module-desc" style="margin:18px 2px 10px;">Paste the AI's full response below to fill in the form. Each drug becomes a pipeline row, and every value stays editable.</p>
       <div class="panel">
         <div class="panel-body">
-          <textarea id="pasteResearchText" placeholder="Paste the AI's numbered response here…" style="width:100%; min-height:180px; background:var(--panel-alt); border:1px solid var(--border); border-radius:4px; color:var(--text); font-family:inherit; font-size:12px; line-height:1.6; padding:12px; resize:vertical;"></textarea>
+          <textarea id="pasteResearchText" aria-label="Paste the AI's answer here" placeholder="Paste the AI's numbered response here…" style="width:100%; min-height:180px; background:var(--panel-alt); border:1px solid var(--border); border-radius:4px; color:var(--text); font-family:inherit; font-size:12px; line-height:1.6; padding:12px; resize:vertical;"></textarea>
           <div class="paste-actions" style="display:flex; align-items:center; gap:10px; margin-top:10px;">
             <button class="btn primary" id="autoFillBtn">Fill in the form</button>
             <button class="btn" id="clearPasteBtn">Clear</button>
@@ -882,27 +996,28 @@
     </div>
     <div class="panel">
       <p class="subhead">Company figures</p>
-      <div class="input-grid">
+      <div class="input-grid cols-4">
           <div class="field"><label for="totalCash">Total cash</label><div class="field-row"><span class="unit">$</span><input type="number" id="totalCash" value="" step="1" min="0"><span class="unit">M</span></div></div>
           <div class="field"><label for="monthsToCatalyst">Months to next catalyst</label><div class="field-row"><input type="number" id="monthsToCatalyst" value="" step="0.1" min="0.1"><span class="unit">mo</span></div></div>
           <div class="field"><label for="baseOverhead">Corporate overhead</label><div class="field-row"><span class="unit">$</span><input type="number" id="baseOverhead" value="" step="1" min="0"><span class="unit">M/yr</span></div></div>
+          <div class="field"><label for="interestExpense">Interest expense</label><div class="field-row"><span class="unit">$</span><input type="number" id="interestExpense" value="" step="0.1" min="0"><span class="unit">M/yr</span></div></div>
           <div class="field"><label for="taxRate">Tax rate once profitable</label><div class="field-row"><input type="number" id="taxRate" value="" step="1" min="0" max="100"><span class="unit">%</span></div></div>
           <div class="field"><label for="nolCarry">Tax-loss carryforward</label><div class="field-row"><span class="unit">$</span><input type="number" id="nolCarry" value="" step="1" min="0"><span class="unit">M</span></div></div>
-          <div class="field"><label for="interestExpense">Interest expense</label><div class="field-row"><span class="unit">$</span><input type="number" id="interestExpense" value="" step="0.1" min="0"><span class="unit">M/yr</span></div></div>
+          <div class="field"><label for="reportedSGA">Reported SG&amp;A</label><div class="field-row"><span class="unit">$</span><input type="number" id="reportedSGA" value="" step="1" min="0" placeholder="Optional"><span class="unit">M</span></div></div>
       </div>
     </div>
-    <p class="disclaimer-note">Corporate overhead is yearly spending outside R&amp;D and outside each drug's own selling costs (those sit in the drug's margin). Tax applies only after past losses are used up: the carryforward is the company's existing tax-loss pool from its 10-K, and losses inside the simulation are added to it. Debt is not an input: enter its yearly cost under interest expense. Repaying it is not part of the simulation (see the note in Results). Enter 0 where something does not apply.</p>
+    <p class="disclaimer-note" data-ph-fold="What each figure includes">Corporate overhead is general and administrative spending only: not R&amp;D, and not selling or marketing, which each drug's pre-launch and yearly selling costs cover. Reported SG&amp;A is optional and only used to check that overhead and selling costs add up to roughly what the company actually spends. Tax applies only after past losses are used up: the carryforward is the company's existing tax-loss pool from its 10-K, and losses inside the simulation are added to it. Debt is not an input: enter its yearly cost under interest expense. Repaying it is not part of the simulation (see the note in Results). Enter 0 where something does not apply.</p>
 
     <div class="panel" style="margin-top:16px;">
       <p class="subhead">Model settings: assumptions about how the business runs, not company facts</p>
-      <div class="input-grid">
+      <div class="input-grid cols-4">
           <div class="field"><label for="prelaunchYears">Pre-launch selling period</label><div class="field-row"><input type="number" id="prelaunchYears" value="" step="0.5" min="0"><span class="unit">yrs</span></div></div>
           <div class="field"><label for="selfSellShare">Self-commercialized above</label><div class="field-row"><input type="number" id="selfSellShare" value="" step="5" min="0" max="100"><span class="unit">%</span></div></div>
           <div class="field"><label for="horizonMax">Years to simulate</label><div class="field-row"><input type="number" id="horizonMax" value="" step="1" min="3" max="40"><span class="unit">yrs</span></div></div>
           <div class="field"><label for="windDown">Wind-down when idle</label><div class="field-row"><select id="windDown"><option value="" selected>Choose</option><option value="yes">Yes, stop overhead</option><option value="no">No, keep paying it</option></select></div></div>
       </div>
     </div>
-    <p class="disclaimer-note">Pre-launch selling costs are spread evenly over the pre-launch period before each launch. A drug with a company share of sales at or above the self-commercialized threshold keeps the company running until its sales fade; below it, the drug counts as passive royalty income. Years to simulate is the longest period the results cover. With wind-down, overhead stops once the company has nothing left to develop or sell; without it, overhead is charged every year.</p>
+    <p class="disclaimer-note" data-ph-fold="How these settings are used">Pre-launch selling costs are spread evenly over the pre-launch period before each launch. A drug with a company share of sales at or above the self-commercialized threshold keeps the company running until its sales fade; below it, the drug counts as passive royalty income. Years to simulate is the longest period the results cover. With wind-down, overhead stops once the company has nothing left to develop or sell; without it, overhead is charged every year.</p>
   </div>
 
   <!-- Pipeline Table -->
@@ -933,7 +1048,7 @@
         </table>
       </div>
     </div>
-    <p class="disclaimer-note">Patients, price, penetration, margin, remaining R&amp;D and annual burn have <b>no default</b>: every included drug needs a value you enter or accept before the simulation can run. Lifetime revenue is the company's total revenue from the drug if approved (its share of sales, including the fade after the patent cliff, plus approval milestones), before any costs.</p>
+    <p class="disclaimer-note" data-ph-fold="About required figures and lifetime revenue">Patients, price, penetration, margin, remaining R&amp;D and annual burn have <b>no default</b>: every included drug needs a value you enter or accept before the simulation can run. Lifetime revenue is the company's total revenue from the drug if approved (its share of sales, including the fade after the patent cliff, plus approval milestones), before any costs.</p>
   </div>
 
   <div class="results-reveal" id="resultsArea" inert aria-hidden="true"><div class="results-reveal-inner">
@@ -947,7 +1062,7 @@
         <p class="module-desc" style="margin-top:4px;">Hypothetical outcomes from the inputs entered above. Not a forecast, valuation or investment advice.</p>
       </div>
     </div>
-    <div class="debt-note prose" id="debtNote"><b>Debt is not included.</b> These results count only the interest expense you entered. If the company has debt, repaying or refinancing it would reduce the cash shown here and could change the funding it needs, so check its debt and when it falls due.</div>
+    <div class="debt-note prose ph-trunc" id="debtNote"><b>Debt is not included.</b><span class="ph-rest"> These results count only the interest expense you entered. If the company has debt, repaying or refinancing it would reduce the cash shown here and could change the funding it needs, so check its debt and when it falls due.</span> <button type="button" class="ph-more" aria-expanded="false">More</button></div>
 
     <div class="panel panel-body summary-box prose" id="simSummary"></div>
 
@@ -959,13 +1074,13 @@
 
       <div class="chart-block">
         <div class="chart-title" id="revChartTitle">Yearly revenue and net income</div>
-        <p class="chart-note prose">Bars: the company's revenue from each drug (its share of sales plus milestones), stacked. White line: estimated net income after all costs, interest and tax. Below the $0 line means a loss.</p>
+        <p class="chart-note prose" data-ph-fold="How to read this chart">Bars: the company's revenue from each drug (its share of sales plus milestones), stacked. White line: estimated net income after all costs, interest and tax. Below the $0 line means a loss.</p>
         <div class="chart-wrap tall"><canvas id="revChart" aria-label="Yearly revenue by drug and net income"></canvas></div>
       </div>
 
       <div class="chart-block">
         <div class="chart-title" id="cashChartTitle">Cash balance</div>
-        <p class="chart-note prose">Cash today plus each year's net income. If the line falls below $0 (red), the company would need outside funding, such as an equity raise, a loan or a partner. <span id="windDownNote"></span></p>
+        <p class="chart-note prose" data-ph-fold="How to read this chart">Cash today plus each year's net income. If the line falls below $0 (red), the company would need outside funding, such as an equity raise, a loan or a partner. <span id="windDownNote"></span></p>
         <div class="chart-wrap"><canvas id="cashChart" aria-label="Cash balance by year"></canvas></div>
       </div>
     </div>
@@ -1018,11 +1133,12 @@
 <div class="legal-page method-page" id="methodPage" style="display:none;">
   <a class="legal-back" href="#" data-close-legal>&larr; Back to the simulator</a>
   <h1>Methodology: how the numbers are calculated</h1>
-  <p class="legal-date">Applies to the current version of the simulator. Last updated: 20 November 2026</p>
+  <p class="legal-date">Applies to the current version of the simulator. Last updated: 21 November 2026</p>
   <p>Project Nublar turns the figures you enter into a year-by-year picture of a company's revenue, costs, tax, net income and cash. Every calculation is described on this page, and every input it uses is one you can see and edit. There is no hidden data, no weighting by probability and nothing that is not listed here.</p>
 
   <h2>1. Basic principles</h2>
   <ul>
+    <li><b>Scope.</b> The simulator models companies that develop or sell drugs. If a pasted AI answer says the company does not (for example a research-tools, diagnostics or device company), nothing is filled in and no results are shown.</li>
     <li><b>Deterministic.</b> You decide which drugs are assumed approved and which fail. The simulator never assigns a probability of success and never averages outcomes.</li>
     <li><b>Yearly periods from today.</b> Year 1 is the next 12 months from the day you open the page, year 2 the 12 months after that, and so on. Each period is labeled with the calendar year its midpoint falls in. These are not the company's fiscal years.</li>
     <li><b>All money in millions of US dollars ($M)</b>, except price per patient, which is in dollars per patient per year.</li>
@@ -1036,10 +1152,11 @@
     <tr><th>Input</th><th>Unit</th><th>Used in</th></tr>
     <tr><td>Total cash</td><td>$M</td><td>Starting point of the cash balance; cash runway.</td></tr>
     <tr><td>Months to next catalyst</td><td>months</td><td>Compared with cash runway for the low-cash warning.</td></tr>
-    <tr><td>Corporate overhead</td><td>$M per year</td><td>Yearly overhead cost (section 7).</td></tr>
+    <tr><td>Corporate overhead</td><td>$M per year</td><td>Yearly general and administrative cost (section 7). Not R&amp;D, and not selling or marketing, which each drug's selling costs cover.</td></tr>
     <tr><td>Tax rate once profitable</td><td>%</td><td>Tax on profit after losses are used up (section 8).</td></tr>
     <tr><td>Tax-loss carryforward</td><td>$M</td><td>Starting size of the loss pool that offsets future profit (section 8).</td></tr>
     <tr><td>Interest expense</td><td>$M per year</td><td>Subtracted every year (section 8); cash runway.</td></tr>
+    <tr><td>Reported SG&amp;A (optional)</td><td>$M, last 12 months</td><td>Never used in the calculation. Only compared with overhead and selling costs for the cost check (section 10).</td></tr>
   </table>
   <h3>Model settings</h3>
   <table class="method-table">
@@ -1054,7 +1171,7 @@
     <tr><th>Input</th><th>Unit</th><th>Used in</th></tr>
     <tr><td>On</td><td>switch</td><td>Unticked drugs are left out of every calculation.</td></tr>
     <tr><td>Approved / fails</td><td>switch</td><td>Chooses which timeline the drug follows (sections 3 to 6). Drugs already on the market are always counted.</td></tr>
-    <tr><td>Phase</td><td>list</td><td>Only "Approved / Marketed" changes the maths: such a drug cannot be switched to fail. Other phases are labels.</td></tr>
+    <tr><td>Phase</td><td>list</td><td>Only "Approved / Marketed" changes the maths: such a drug cannot be switched to fail. Other phases are labels. Preclinical programs from an AI answer are added switched off, so they count only if you tick On.</td></tr>
     <tr><td>Patients</td><td>people</td><td>Peak sales.</td></tr>
     <tr><td>Price / patient</td><td>$ per year</td><td>Peak sales.</td></tr>
     <tr><td>Peak penetration</td><td>%</td><td>Peak sales.</td></tr>
@@ -1063,14 +1180,15 @@
     <tr><td>Years to patent cliff</td><td>years from today</td><td>When the drug loses market exclusivity and sales start to fade.</td></tr>
     <tr><td>Fade after cliff</td><td>years</td><td>Time for sales to fall to zero after the patent cliff.</td></tr>
     <tr><td>Company share of sales</td><td>%</td><td>Share of the drug's sales that is the company's revenue (100% if it sells the drug itself; a royalty rate if a partner sells it).</td></tr>
-    <tr><td>Margin on company share</td><td>%</td><td>Profit kept from the company's share of sales after manufacturing, royalties paid out and the drug's own selling costs.</td></tr>
+    <tr><td>Margin on company share</td><td>%</td><td>Share of the company's sales kept after manufacturing, royalties paid out and costs that grow with each patient (distribution, patient support). The sales force and marketing are not taken out here; the yearly selling cost covers them.</td></tr>
     <tr><td>Approval milestones</td><td>$M, once</td><td>One-time payment to the company in the launch year, if approved.</td></tr>
     <tr><td>Remaining R&amp;D</td><td>$M total</td><td>Development spending still to come before launch.</td></tr>
     <tr><td>Annual burn</td><td>$M per year</td><td>Spending rate until the drug's next catalyst; cash runway.</td></tr>
     <tr><td>Months to catalyst</td><td>months from today</td><td>When the drug's next readout happens: the point where a failing drug stops spending, and where its spending switches from annual burn to the rest of its remaining R&amp;D. A blank field counts as 0. If an AI answer gives no figure, it is set to the company's months to next catalyst (or 14 months if that is missing too) and outlined in red until you change it.</td></tr>
     <tr><td>Pre-launch selling</td><td>$M total</td><td>Launch preparation spending before launch.</td></tr>
+    <tr><td>Yearly selling cost</td><td>$M per year</td><td>Sales force, marketing and market access once the drug is launched (section 4). For a drug a partner sells, 0.</td></tr>
   </table>
-  <p>A drug is only simulated when patients, price, penetration, margin, remaining R&amp;D and annual burn are all filled in. Blank optional drug fields (company share of sales, approval milestones, fade after cliff, pre-launch selling) count as 100%, 0, 0 and 0. Percentages are limited to 0 to 100 and other values to zero or more.</p>
+  <p>A drug is only simulated when patients, price, penetration, margin, remaining R&amp;D and annual burn are all filled in. Blank optional drug fields (company share of sales, approval milestones, fade after cliff, pre-launch selling, yearly selling cost) count as 100%, 0, 0, 0 and 0. A blank yearly selling cost on a drug the company sells itself is outlined in red, and the summary warns that its profit may be overstated. Percentages are limited to 0 to 100 and other values to zero or more.</p>
 
   <h2>3. A drug's sales</h2>
   <div class="method-formula">Peak sales ($M per year) = patients &times; peak penetration &times; price per patient &divide; 1,000,000</div>
@@ -1086,7 +1204,8 @@
 
   <h2>4. Company revenue and product profit (if approved)</h2>
   <div class="method-formula">Company revenue from a drug = sales &times; company share of sales + approval milestones (in the launch year)</div>
-  <div class="method-formula">Product profit = sales &times; company share of sales &times; margin + approval milestones (in full)</div>
+  <div class="method-formula">Product profit = sales &times; company share of sales &times; margin + approval milestones (in full) &minus; yearly selling cost &times; the part of the year it is paid</div>
+  <p>The yearly selling cost is paid in full from launch to the patent cliff, because a sales force costs the same whether early sales are small or large. After the patent cliff it falls in a straight line to zero over the fade after cliff, in step with sales. If the patent cliff comes before launch there are no sales and no selling cost. This is why a drug the company sells itself usually loses money in its first years and earns more later.</p>
   <p>Milestones are paid in the yearly period that contains the launch date (year 1 for a drug launching today).</p>
 
   <h2>5. R&amp;D and launch spending (if approved)</h2>
@@ -1138,6 +1257,7 @@
     <tr><td>Lifetime revenue (pipeline table)</td><td>The company's total revenue from the drug if approved, over its whole life (until its sales fade to zero), including the milestone, before any costs. Not limited to the period shown.</td></tr>
     <tr><td>Drug by Drug table</td><td>For each drug if approved: launch year, peak yearly company revenue, total company revenue and total product profit over the period shown; its remaining R&amp;D; and what it would spend if it fails (section 6).</td></tr>
     <tr><td>Compare tab</td><td>The same results, calculated the same way, for each open tab from its own inputs.</td></tr>
+    <tr><td>Cost checks</td><td>Warnings in the summary that never change a number: a drug the company sells itself with no yearly selling cost; and, when reported SG&amp;A is entered, overhead plus the yearly selling costs of drugs already on sale coming out more than 25% above it (costs possibly counted twice; pre-launch spending is left out of this test because it is new launch preparation), or overhead, those selling costs and the coming year's pre-launch selling together coming out more than 25% below it (costs possibly missing).</td></tr>
   </table>
   <p>Figures on screen are rounded for display ($1.2B, $850M); the calculations use the unrounded values.</p>
 
@@ -1145,6 +1265,7 @@
   <ul>
     <li>Any probability of success, risk adjustment or discounting for the time value of money.</li>
     <li>Changes in price, inflation, competition, market growth or currency over time, beyond the shape of the sales curve.</li>
+    <li>Selling costs that move in other ways than a flat yearly amount from launch that falls with sales after the patent cliff, for example a sales force that grows as sales grow.</li>
     <li>Limits on using tax losses (for example, the US rule allowing losses to offset only 80% of taxable income in a year): losses here offset profit in full.</li>
     <li>Repayment or refinancing of debt, new share issues, dilution and the timing of cash versus profit.</li>
     <li>Later-stage failures, delays and partial approvals: each drug is either approved on your timeline or fails at its next readout.</li>
@@ -1157,7 +1278,7 @@
 <div class="legal-page" id="legalPage" style="display:none;">
   <a class="legal-back" href="#" data-close-legal>&larr; Back to the simulator</a>
   <h1>Disclaimer and terms of use</h1>
-  <p class="legal-date">Last updated: 20 November 2026</p>
+  <p class="legal-date">Last updated: 21 November 2026</p>
   <p>Please read this before using Project Nublar or sharing anything it produces. By using the simulator you agree to these terms. If you do not agree, do not use it.</p>
 
   <h2>1. What this tool is</h2>
@@ -1198,6 +1319,7 @@
     <li>Years are 12-month periods starting today, not calendar or fiscal years.</li>
     <li>Corporate overhead is constant, and each drug is treated independently of the others.</li>
     <li>Revenue follows a simplified shape: a straight ramp to peak, flat until the patent cliff, then a straight fade. Prices, costs and market size do not change over time.</li>
+    <li>Each drug's selling costs are one flat yearly amount from launch, falling with sales after the patent cliff: an approximation of how a sales force is really paid.</li>
     <li>Drugs already on the market follow the same inputs as any other drug, so their ramp is counted from today.</li>
   </ul>
   <p>The <a href="#methodology" data-open-method>methodology</a> explains every calculation and input.</p>
@@ -1300,6 +1422,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   }
 
   var PHASES = [
+    { key: 'preclinical', label: 'Preclinical' },
     { key: 'phase1', label: 'Phase 1' },
     { key: 'phase2', label: 'Phase 2' },
     { key: 'phase3', label: 'Phase 3' },
@@ -1341,7 +1464,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     // but only affects the native spinner/validity state, not what a typed
     // value actually becomes - this bound is the real guard.
     targetPatients: [0, null], pricePerPatient: [0, null],
-    erosionYears: [0, null], salesShare: [0, 100], milestone: [0, null], prelaunchSpend: [0, null]
+    erosionYears: [0, null], salesShare: [0, 100], milestone: [0, null], prelaunchSpend: [0, null], sellingCost: [0, null]
   };
   function clampOverride(field, v) {
     var b = OVERRIDE_BOUNDS[field];
@@ -1373,6 +1496,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
       // one-time milestone payments due on approval; selling costs spent in
       // the 2 years before launch. Neutral defaults, flagged until researched.
       erosionYears: 0, salesShare: 100, milestone: 0, prelaunchSpend: 0,
+      // Yearly selling cost once launched ($M/yr): sales force, marketing, market
+      // access. null = not given (counted as 0 and flagged when the company sells
+      // the drug itself).
+      sellingCost: null, sellingCostIsEstimate: false,
       erosionYearsIsDefault: true, salesShareIsDefault: true, milestoneIsDefault: true, prelaunchSpendIsDefault: true,
       erosionYearsIsEstimate: false, salesShareIsEstimate: false, milestoneIsEstimate: false, prelaunchSpendIsEstimate: false,
       monthsToCatalyst: 14,
@@ -1456,7 +1583,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   var el = {};
   ['totalCash', 'monthsToCatalyst', 'baseOverhead',
    'taxRate', 'nolCarry', 'interestExpense', 'windDown',
-   'prelaunchYears', 'selfSellShare', 'horizonMax'].forEach(function (id) {
+   'prelaunchYears', 'selfSellShare', 'horizonMax', 'reportedSGA'].forEach(function (id) {
     el[id] = document.getElementById(id);
   });
 
@@ -1476,9 +1603,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
   function companyFrom(src) {
     var company = {};
-    company.totalCash = num(src.totalCash, 0);
-    company.monthsToCatalyst = num(src.monthsToCatalyst, 18);
-    company.baseOverhead = num(src.baseOverhead, 30);
+    // Same limits as each input's allowed range (shown to the user when exceeded).
+    company.totalCash = Math.max(0, num(src.totalCash, 0));
+    company.monthsToCatalyst = Math.max(0.1, num(src.monthsToCatalyst, 18));
+    company.baseOverhead = Math.max(0, num(src.baseOverhead, 30));
     company.windDown = src.windDown ? String(src.windDown.value) !== 'no' : true;
     company.taxRate = Math.min(100, Math.max(0, num(src.taxRate, 21)));
     company.nolCarry = Math.max(0, num(src.nolCarry, 0));
@@ -1490,6 +1618,12 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     return company;
   }
   function readCompanyInputs() { company = companyFrom(el); }
+  // A drug the company sells itself: its share of sales is at or above the
+  // self-commercialized threshold (otherwise a partner sells it).
+  function sellsItself(a) {
+    var share = isFinite(a.salesShare) && a.salesShare !== null ? a.salesShare : 100;
+    return share >= (company && isFinite(company.selfSellShare) ? company.selfSellShare : 50);
+  }
   // Every company figure and model setting is required: none has a default.
   var REQUIRED_CO = [
     ['totalCash', 'total cash'], ['monthsToCatalyst', 'months to next catalyst'],
@@ -1506,10 +1640,20 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   function renderCompanyFlags() {
     Object.keys(el).forEach(function (id) {
       var fld = el[id].closest('.field'); if (!fld) return;
-      var empty = String(el[id].value).trim() === '';
+      var empty = String(el[id].value).trim() === '' && REQUIRED_CO.some(function (r) { return r[0] === id; });
       fld.classList.toggle('flagged-default', empty);
       fld.classList.toggle('flagged-estimate', !empty && !!coAi[id]);
       fld.title = empty ? 'Required: enter a value to run the simulation' : (coAi[id] ? 'Filled in by the AI. Check it or change it.' : '');
+      if (String(el[id].value).trim() === '' && !empty) fld.classList.remove('flagged-estimate');
+      // Outside the allowed range: the calculation uses the nearest allowed value, so say which.
+      if (!empty && el[id].type === 'number') {
+        var v = parseFloat(el[id].value), mn = el[id].min !== '' ? parseFloat(el[id].min) : -Infinity, mx = el[id].max !== '' ? parseFloat(el[id].max) : Infinity;
+        if (isFinite(v) && (v < mn || v > mx)) {
+          var used = Math.min(mx, Math.max(mn, v));
+          fld.classList.add('flagged-default'); fld.classList.remove('flagged-estimate');
+          fld.title = 'Outside the allowed range (' + (isFinite(mn) ? mn : 'any') + (isFinite(mx) ? ' to ' + mx : ' or more') + '). The simulation uses ' + used + '.';
+        }
+      }
     });
   }
 
@@ -1620,11 +1764,32 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   function overlap(t, lo, hi) { return Math.max(0, Math.min(t, hi) - Math.max(t - 1, lo)); }
 
   // Everything one drug contributes, year by year, if approved or if it fails.
+  // Share of year t (the period from t-1 to t years from today) during which a
+  // drug's yearly selling cost is paid: in full from launch to the patent
+  // cliff, then falling in a straight line to zero over the fade, in step with
+  // sales. Nothing if the cliff comes before launch (no sales at all).
+  function sellingFractionAtYear(t, L, X, E) {
+    if (X <= L) return 0;
+    var a0 = t - 1, a1 = t;
+    var full = Math.max(0, Math.min(a1, X) - Math.max(a0, L));
+    var fade = 0;
+    if (E > 0) {
+      var f0 = Math.max(a0, X), f1 = Math.min(a1, X + E);
+      if (f1 > f0) {
+        var w = function (x) { return 1 - (x - X) / E; };
+        fade = (w(f0) + w(f1)) / 2 * (f1 - f0);
+      }
+    }
+    return full + fade;
+  }
+
   function drugTimeline(a, p, peakSales, co, H) {
     var L = Math.max(0, a.yearsToLaunch), R = Math.max(0, a.rampYears), X = Math.max(0, a.exclusivityYears), E = Math.max(0, a.erosionYears || 0);
     var share = Math.min(100, Math.max(0, isFinite(a.salesShare) ? a.salesShare : 100)) / 100;
     var margin = Math.max(0, p.margin || 0) / 100, mile = Math.max(0, a.milestone || 0), pre = Math.max(0, a.prelaunchSpend || 0);
     var rnd = Math.max(0, p.remainingRnD || 0), burn = Math.max(0, p.annualBurn || 0);
+    // Yearly selling cost (sales force, marketing, market access) once launched.
+    var sellCost = Math.max(0, a.sellingCost || 0);
     var catMonths = isFinite(a.monthsToCatalyst) ? a.monthsToCatalyst : co.monthsToCatalyst;
     var catYrs = Math.max(0, catMonths) / 12;
     // A drug the user marks "Fails" stops all spending at its next readout
@@ -1632,14 +1797,15 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     var failStop = L > 0 ? Math.min(catYrs, L) : catYrs;
     var segs = spendSegments(L, rnd, burn, catYrs, pre, co.prelaunchYears);
     var mileIdx = L <= 0 ? 0 : Math.max(0, Math.ceil(L) - 1);
-    var tl = { rev: zeros(H), sales: zeros(H), contrib: zeros(H), costA: zeros(H), costF: zeros(H),
+    var tl = { rev: zeros(H), sales: zeros(H), contrib: zeros(H), selling: zeros(H), costA: zeros(H), costF: zeros(H),
       L: L, X: X, E: E, share: share, margin: margin, catYrs: catYrs, failEnd: failStop };
     for (var t = 1; t <= H; t++) {
       var sales = (peakSales || 0) * salesFractionAtYear(t, L, R, X, E);
       var ms = (t - 1 === mileIdx) ? mile : 0;
       tl.sales[t - 1] = sales;
       tl.rev[t - 1] = sales * share + ms;
-      tl.contrib[t - 1] = sales * share * margin + ms;
+      tl.selling[t - 1] = sellCost * sellingFractionAtYear(t, L, X, E);
+      tl.contrib[t - 1] = sales * share * margin + ms - tl.selling[t - 1];
       tl.costA[t - 1] = spendInYear(segs, t, Infinity);
       tl.costF[t - 1] = spendInYear(segs, t, failStop);
     }
@@ -1915,6 +2081,35 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   // The charts show the drugs' approved/fails settings (stored on each asset).
   function selectedScenario(sim) { return sim.current; }
 
+  // Cost checks shown in the summary. They never change a number.
+  function costChecks(sim) {
+    var out = [];
+    var noSell = sim.items.filter(function (it) { return sellsItself(it.asset) && !(it.asset.sellingCost > 0); });
+    if (noSell.length) out.push('Worth checking: no yearly selling cost is entered for ' + noSell.map(function (it) { return escapeHtml(it.name); }).join(', ') +
+      ', which the company sells itself, so the sales force and marketing for ' + (noSell.length === 1 ? 'it are' : 'them are') + ' left out and the profit shown may be too high.');
+    var sga = parseFloat(el.reportedSGA.value);
+    if (isFinite(sga) && sga > 0) {
+      // Next 12 months implied by the inputs: overhead + selling cost of drugs
+      // already launched + pre-launch selling spend falling in year 1.
+      var sell1 = 0, pre1 = 0;
+      sim.items.forEach(function (it) {
+        var a = it.asset, L = Math.max(0, a.yearsToLaunch || 0);
+        if (L <= 0) sell1 += Math.max(0, a.sellingCost || 0) * sellingFractionAtYear(1, L, Math.max(0, a.exclusivityYears), Math.max(0, a.erosionYears || 0));
+        var pre = Math.max(0, a.prelaunchSpend || 0);
+        if (pre > 0 && L > 0) { var s0 = Math.max(0, L - company.prelaunchYears); pre1 += L - s0 > 0 ? pre * Math.max(0, Math.min(1, L) - s0) / (L - s0) : (L <= 1 ? pre : 0); }
+      });
+      // Pre-launch spend is new launch preparation that past SG&A usually doesn't
+      // contain, so the "counted twice" test leaves it out; the "missing" test keeps it.
+      var ongoing = company.baseOverhead + sell1, implied = ongoing + pre1;
+      var detail = ' (overhead ' + fmtBig(company.baseOverhead) + ' + selling costs of drugs on sale ' + fmtBig(sell1) + ' + pre-launch selling ' + fmtBig(pre1) + ')';
+      if (ongoing > sga * 1.25) out.push('Worth checking: overhead plus the selling costs of drugs already on sale come to about ' + fmtBig(ongoing) + ' a year (overhead ' + fmtBig(company.baseOverhead) + ' + selling costs ' + fmtBig(sell1) +
+        '), well above the company\u2019s reported SG&amp;A of ' + fmtBig(sga) + '. Some costs may be counted twice, for example selling costs included in overhead as well.');
+      else if (implied < sga * 0.75) out.push('Worth checking: your inputs imply about ' + fmtBig(implied) + ' of overhead and selling costs over the next 12 months' + detail +
+        ', well below the company\u2019s reported SG&amp;A of ' + fmtBig(sga) + '. Some overhead or selling costs may be missing.');
+    }
+    return out;
+  }
+
   function renderSummary(model) {
     var el = document.getElementById('simSummary');
     if (!model.sim) {
@@ -1942,6 +2137,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
       s.push('<li>If <b>everything is approved</b>, yearly revenue could reach about <span class="sum-num">' + fmtBig(all.peakRev) + '</span> by ' + L[all.peakIdx] +
         (all.firstProfitIdx !== null ? ', with the first profitable year in ' + L[all.firstProfitIdx] + '.' : ', but the company would not turn a profit within the period shown.') + '</li>');
     }
+    costChecks(sim).forEach(function (msg) { s.push('<li class="sum-alert">' + msg + '</li>'); });
     if (model.shortCash) s.push('<li class="sum-alert">With these inputs, cash on hand covers about ' + fmtRunway(model.runwayMonths) + ' of spending, less than the ' + company.monthsToCatalyst + ' months to the next catalyst.</li>');
     el.innerHTML = '<ul class="sum-list">' + s.join('') + '</ul>';
   }
@@ -2023,7 +2219,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     var line = function (name, expr, res, note) { return '<div class="eq-line"><div class="eq-name">' + name + '</div><div class="eq-expr">' + expr + '</div>' + (res !== undefined ? '<div class="eq-result">' + res + '</div>' : '') + (note ? '<div class="eq-note">' + note + '</div>' : '') + '</div>'; };
     mc.innerHTML =
       line('Revenue from a drug, each year', 'Peak sales × share of peak that year × company share of sales, plus any milestone in the approval year. Share of peak is 0 before launch, ramps to 100%, holds until the patent cliff, then fades to 0 over the fade years. Peak sales = patients × penetration × price.') +
-      line('Product profit', 'Company revenue × the drug\'s margin (after manufacturing, royalties and selling costs); milestones count in full.') +
+      line('Product profit', 'Company revenue × the drug\'s margin (after manufacturing, royalties paid and per-patient costs) + milestones − its yearly selling cost (sales force, marketing, market access), paid in full from launch to the patent cliff and falling with sales after it.') +
       line('R&amp;D and launch spending', 'Trial burn until the drug\'s next catalyst, then the rest of its remaining R&amp;D until launch, plus pre-launch selling costs ' + (company.prelaunchYears > 0 ? 'spread over the ' + company.prelaunchYears + ' year' + (company.prelaunchYears === 1 ? '' : 's') + ' before launch' : 'spent at launch') + '. A drug you mark as failing stops all spending at its next catalyst and earns no revenue.') +
       line('Operating profit', 'Σ product profit − corporate overhead (' + fmtBig(company.baseOverhead) + '/yr) − R&amp;D spending', undefined, 'Overhead stops once the company has nothing left to develop or sell: after the last approved drug it sells itself fades out, or the last failed drug stops. Drugs with a company share below ' + (company.selfSellShare != null ? company.selfSellShare : 50) + '% (royalty-type) do not keep it running. Set by the wind-down setting in Company and model settings.') +
       line('Net income (est.)', 'Operating profit − interest (' + fmtBig(company.interestExpense) + '/yr) − tax. Tax is ' + (company.taxRate || 0) + '% of profit after past losses are used up (starting loss carryforward ' + fmtBig(company.nolCarry) + ', plus any losses in the simulation).') +
@@ -2132,18 +2328,19 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
       var rnpvCls = '';
       var rnpvTxt = m.missingCost ? 'N/A <svg class="flag-warn" viewBox="0 0 16 16" fill="none"><path d="M8 2.2 1.6 13.2a1 1 0 0 0 .87 1.5h11.06a1 1 0 0 0 .87-1.5L8 2.2z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M8 6.3v3.4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="8" cy="11.8" r="0.9" fill="currentColor"/></svg>' : fmtBig(m.grossRevenue);
       var color = assetColorAt(idx);
+      var lab = function (what) { return ' aria-label="' + escapeHtml(what + ' for ' + (a.name || 'drug ' + (idx + 1))) + '"'; };
       // Target Patients has no fallback (see effectiveParams' missingCost) -
       // same empty/estimate treatment as Remaining R&D / Annual Burn below.
       var patientsEmpty = a.targetPatients === null;
       var patientsEstimate = !patientsEmpty && a.targetPatientsIsEstimate;
 
       html += '<tr data-id="' + a.id + '" class="' + (a.included ? '' : 'excluded') + '">' +
-        '<td><input type="checkbox" class="toggle" data-field="included" ' + (a.included ? 'checked' : '') + '></td>' +
-        '<td><input type="text" class="name-in" style="border-left:3px solid ' + color + ';" data-field="name" value="' + escapeHtml(a.name) + '"></td>' +
-        '<td><select class="phase-sel" data-field="phase">' + optionsHTML(PHASES, a.phase) + '</select></td>' +
-        '<td' + flagCellAttrs(patientsEmpty, patientsEstimate, 'required, no default. Enter your own figure (the AI prompt can suggest one)', 'AI estimate, anchored to a named comparable or a labeled generic figure. Sanity-check it before relying on it.') + '><input type="number" class="num-md" data-field="targetPatients" value="' + (a.targetPatients === null ? '' : a.targetPatients) + '" step="500" min="0" placeholder="none"></td>' +
-        '<td' + flagCellAttrs(a.pricePerPatient === null || a.pricePerPatient === undefined, false, 'required, no default. Enter your own figure (the AI prompt can suggest one)', '') + '><input type="number" class="num-md" data-field="pricePerPatient" value="' + (a.pricePerPatient === null || a.pricePerPatient === undefined ? '' : a.pricePerPatient) + '" step="1000" min="0"></td>' +
-        '<td' + flagCellAttrs(!!a.monthsToCatalystIsDefault, false, 'The AI answer gave no figure, so this is the company\u2019s months to its next catalyst (or 14 if that is missing too). Enter the months to this drug\u2019s own next readout', '') + '><input type="number" class="num-sm" data-field="monthsToCatalyst" value="' + a.monthsToCatalyst + '" step="1" min="0"></td>' +
+        '<td><input type="checkbox" class="toggle" data-field="included"' + lab('Include in the simulation') + ' ' + (a.included ? 'checked' : '') + '></td>' +
+        '<td><input type="text" class="name-in" style="border-left:3px solid ' + color + ';" data-field="name" aria-label="Drug name" value="' + escapeHtml(a.name) + '"></td>' +
+        '<td><select class="phase-sel" data-field="phase"' + lab('Phase') + '>' + optionsHTML(PHASES, a.phase) + '</select></td>' +
+        '<td' + flagCellAttrs(patientsEmpty, patientsEstimate, 'required, no default. Enter your own figure (the AI prompt can suggest one)', 'AI estimate, anchored to a named comparable or a labeled generic figure. Sanity-check it before relying on it.') + '><input type="number" class="num-md" data-field="targetPatients"' + lab('Patients') + ' value="' + (a.targetPatients === null ? '' : a.targetPatients) + '" step="500" min="0" placeholder="none"></td>' +
+        '<td' + flagCellAttrs(a.pricePerPatient === null || a.pricePerPatient === undefined, false, 'required, no default. Enter your own figure (the AI prompt can suggest one)', '') + '><input type="number" class="num-md" data-field="pricePerPatient"' + lab('Price per patient in dollars') + ' value="' + (a.pricePerPatient === null || a.pricePerPatient === undefined ? '' : a.pricePerPatient) + '" step="1000" min="0"></td>' +
+        '<td' + flagCellAttrs(!!a.monthsToCatalystIsDefault, false, 'The AI answer gave no figure, so this is the company\u2019s months to its next catalyst (or 14 if that is missing too). Enter the months to this drug\u2019s own next readout', '') + '><input type="number" class="num-sm" data-field="monthsToCatalyst"' + lab('Months to next catalyst') + ' value="' + a.monthsToCatalyst + '" step="1" min="0"></td>' +
         '<td class="out-cell">' + (m.peakSales === null ? 'N/A <svg class="flag-warn" viewBox="0 0 16 16" fill="none"><path d="M8 2.2 1.6 13.2a1 1 0 0 0 .87 1.5h11.06a1 1 0 0 0 .87-1.5L8 2.2z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M8 6.3v3.4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="8" cy="11.8" r="0.9" fill="currentColor"/></svg>' : fmtBig(m.peakSales)) + '</td>' +
         '<td class="out-cell ' + rnpvCls + (m.missingCost ? ' flagged-cell flag-default' : '') + '" title="' + (m.missingCost ? 'Needs your input: a required figure is missing (patients, price, penetration, margin, remaining R&D or annual burn)' : '') + '">' + rnpvTxt + '</td>' +
         '<td><div class="row-actions"><button class="icon-btn expand-btn" title="Timing, costs and the calculation">ƒx</button><button class="icon-btn del del-btn" title="Remove">✕</button></div></td>' +
@@ -2170,14 +2367,16 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
             directField(a.id, 'salesShare', 'Company share of sales (%)', a.salesShare, a.salesShareIsDefault, a.salesShareIsEstimate) +
             directField(a.id, 'milestone', 'Approval milestones ($M)', a.milestone, a.milestoneIsDefault, a.milestoneIsEstimate) +
             directField(a.id, 'prelaunchSpend', 'Pre-launch selling ($M)', a.prelaunchSpend, a.prelaunchSpendIsDefault, a.prelaunchSpendIsEstimate) +
+            directField(a.id, 'sellingCost', 'Yearly selling cost ($M/yr)', a.sellingCost, a.sellingCost === null && sellsItself(a), a.sellingCostIsEstimate,
+              'not given, so counted as $0. Enter this drug\u2019s yearly sales force, marketing and market access cost once launched.') +
           '</div>' +
-          '<div class="drawer-math">' +
+          phFoldBtn('math' + a.id, 'Show the calculation') + '<div class="drawer-math ' + phFoldCls('math' + a.id) + '">' +
             (m.missingCost ?
               '<span class="eq-name" style="color:var(--red);">Needs your input</span>: this drug is missing at least one required figure (target patients, price per patient, penetration, margin, remaining R&amp;D or annual burn). Enter it above (the optional AI prompt can suggest one).'
             :
               '<span class="eq-name" title="÷1,000,000 converts dollars to $M">Peak sales ($M)</span> = Patients × Penetration × Price = ' + Number(a.targetPatients).toLocaleString('en-US') + ' × ' + m.p.penetration + '% × $' + Number(a.pricePerPatient).toLocaleString('en-US') + ' = <span class="eq-result">' + fmtM(m.peakSales) + '</span><br>' +
               '<span class="eq-name">Lifetime revenue if approved</span> = Σ [Peak sales × share of peak(t) × company share ' + fmtPct(m.tl.share * 100, 0) + '] + milestones = <span class="eq-result">' + fmtM(m.grossRevenue) + '</span><br>' +
-              '<span class="eq-name">Product profit if approved</span> = company revenue × margin ' + fmtPct(m.p.margin, 0) + ' + milestones = <span class="eq-result">' + fmtM(m.netRevenue) + '</span><br>' +
+              '<span class="eq-name">Product profit if approved</span> = company revenue × margin ' + fmtPct(m.p.margin, 0) + ' + milestones − selling cost (' + fmtM(Math.max(0, a.sellingCost || 0)) + '/yr from launch, falling with sales after the patent cliff) = <span class="eq-result">' + fmtM(m.netRevenue) + '</span><br>' +
               '<span class="eq-name">R&amp;D still to spend if approved</span> = <span class="eq-result">' + fmtM(m.pvCost) + '</span> (trial burn until the next catalyst, the rest until launch)' + ((a.prelaunchSpend || 0) > 0 ? ' + pre-launch selling ' + fmtM(a.prelaunchSpend) : '') + '<br>' +
               '<span class="eq-name">If it fails</span> = spending stops at its next catalyst (' + (+a.monthsToCatalyst || 0) + ' months from today), or at launch if that comes first; spent before stopping = <span class="eq-result">' + fmtM(m.spentIfFails) + '</span>'
             ) +
@@ -2274,7 +2473,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
       : (isEstimateFlag
           ? '<div class="flag-note flag-note-estimate"><span class="flag-dot"></span>AI suggestion. Keep it or change it.</div>'
           : '');
-    return wrapOpen + '<label>' + label + '</label><div class="field-row">' +
+    return wrapOpen + labelWithTip(field, label) + '<div class="field-row">' +
       '<input type="number" step="any"' + bounds + ' data-override-id="' + id + '" data-override-field="' + field + '" value="' + (currentVal === null ? '' : currentVal) + '" placeholder="' + placeholderText + '"></div>' + note + '</div>';
   }
   // Like drawerField but for a direct (non-override) asset field: always has
@@ -2283,18 +2482,18 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   // true "Not stated" silently filled with a generic default, BLUE = a real
   // AI-labeled "(estimate)" anchored to a comparable) for fields - like the
   // three timing inputs - that always carry a real displayed number.
-  function directField(id, field, label, currentVal, isDefault, isEstimate) {
+  function directField(id, field, label, currentVal, isDefault, isEstimate, defaultNote) {
     var b = OVERRIDE_BOUNDS[field];
     var bounds = b ? (' min="' + b[0] + '"' + (b[1] !== null ? ' max="' + b[1] + '"' : '')) : '';
     var wrapOpen = isDefault ? '<div class="field flagged-default">'
       : (isEstimate ? '<div class="field flagged-estimate">' : '<div class="field">');
     var note = isDefault
-      ? '<div class="flag-note flag-note-default"><span class="flag-dot"></span>still at its default. Change it if you disagree.</div>'
+      ? '<div class="flag-note flag-note-default"><span class="flag-dot"></span>' + (defaultNote || 'still at its default. Change it if you disagree.') + '</div>'
       : (isEstimate
           ? '<div class="flag-note flag-note-estimate"><span class="flag-dot"></span>AI suggestion. Keep it or change it.</div>'
           : '');
-    return wrapOpen + '<label>' + label + '</label><div class="field-row">' +
-      '<input type="number" step="0.5"' + bounds + ' data-direct-id="' + id + '" data-direct-field="' + field + '" value="' + currentVal + '"></div>' + note + '</div>';
+    return wrapOpen + labelWithTip(field, label) + '<div class="field-row">' +
+      '<input type="number" step="0.5"' + bounds + ' data-direct-id="' + id + '" data-direct-field="' + field + '" value="' + (currentVal === null || currentVal === undefined ? '' : currentVal) + '"></div>' + note + '</div>';
   }
 
   /* ============================================================
@@ -2321,7 +2520,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     }).join('');
     el.innerHTML = '<div class="table-scroll"><table class="assets"><thead><tr><th>Drug</th><th>Launch</th><th>Peak yearly revenue</th><th>Total revenue if approved</th><th>Product profit if approved</th><th>R&amp;D still to spend</th><th>Spent if it fails</th></tr></thead><tbody>' +
       (rows || '<tr><td colspan="7">No included drugs.</td></tr>') + '</tbody></table></div>' +
-      '<p class="disclaimer-note">Figures cover ' + L[0] + '–' + L[L.length - 1] + ' and show what happens if the drug is approved (or fails). Revenue is the company\'s share of sales plus approval milestones; product profit = that revenue × margin (milestones in full), before overhead, interest and tax. R&amp;D still to spend excludes pre-launch selling costs. A failing drug stops spending at its next catalyst.</p>';
+      phFoldBtn('drugnote', 'What these figures include') + '<p class="disclaimer-note ' + phFoldCls('drugnote') + '">Figures cover ' + L[0] + '–' + L[L.length - 1] + ' and show what happens if the drug is approved (or fails). Revenue is the company\'s share of sales plus approval milestones; product profit = that revenue × margin (milestones in full), before overhead, interest and tax. R&amp;D still to spend excludes pre-launch selling costs. A failing drug stops spending at its next catalyst.</p>';
   }
 
   /* ============================================================
@@ -2338,7 +2537,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
       "count, or price, in this priority order, and name which one you used right after that value. Item 9 " +
       "(Asset name/code) is just an identifier, not a researched figure, do NOT attach a source citation to " +
       "it or answer it with sourcing text; just give the drug's actual name or code):\n" +
-      "(a) The company's own SEC filings (10-Q/10-K/8-K) or official investor materials, use these whenever " +
+      "(a) The company's own SEC filings (10-Q/10-K/8-K, or 20-F/6-K for a non-US company) or official investor materials, use these whenever " +
       "the figure is disclosed there, even if a news article or analyst note states a different number.\n" +
       "(b) A specific, named analyst estimate or conference/earnings-call statement, cite the firm and date.\n" +
       "(c) Only if neither (a) nor (b) exists, your own estimate, label it \"(estimate)\", give the single " +
@@ -2358,29 +2557,33 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
       "not simply because no company/analyst figure was disclosed. A wide range anchored to a real comparable " +
       "is far more useful to this model than a blank field, since a blank field blocks the company's simulation entirely. " +
       "Labeled estimates are not fabrication here: the simulator shows every value to the user as an AI suggestion to check and edit, " +
-      "never as a researched fact. So do not stop at a list of drugs; give the full numbered block, items 9 to 26, for every drug that meets the bar below.\n\n" +
+      "never as a researched fact. So do not stop at a list of drugs; give the full numbered block, items 9 to 27, for every drug that meets the bar below.\n\n" +
       "=== COMPANY-LEVEL ===\n" +
       "1. Company name: just the company's name (no source citation on this line)\n" +
-      "2. Federal net operating loss (NOL) carryforwards ($M): from the income-tax footnote of the most recent 10-K, with the filing date; answer 0 if the company has none\n" +
+      "2. Tax-loss carryforwards ($M) the company can use against future profits: from the income-tax footnote of the most recent annual report (10-K, or 20-F for a non-US company), with the filing date. " +
+      "For a US company give its federal net operating losses; for a non-US company give the tax losses in its home country. Do not give the accumulated deficit. Answer 0 only if the company has none\n" +
       "3. Total cash, cash equivalents, and short-term investments ($M): most recent quarter, with the quarter-end date\n" +
       "4. Total debt ($M), if any; answer 0 if none\n" +
       "5. Estimated months from today (" + todayStr + ") to the company's next major binary catalyst/data readout " +
       "(across the whole pipeline, whichever comes soonest): name the specific catalyst and its target date\n" +
       "6. Income tax rate (%) the company would pay once profitable: its disclosed expected effective rate if any, otherwise the statutory rate where it is taxed (e.g. about 21% US federal, plus state if known)\n" +
       "7. Annual interest expense ($M per year) on its debt: from the latest 10-Q/10-K (annualize the latest quarter); answer 0 if it has no debt\n" +
-      "8. Corporate overhead / SG&A spend per year ($M), excluding R&D trial costs (for a company with a marketed product, " +
-      "also exclude the selling/commercial costs of that product, which belong in item 22's margin, so they are not counted twice)\n\n" +
+      "8. Corporate overhead per year ($M): general and administrative (G&A) expense only, from the latest filings (annualize the latest quarter if needed). " +
+      "Exclude R&D, and exclude selling, marketing and commercial costs: items 26 and 27 cover those for each drug, so they are not counted twice\n" +
+      "S. Reported SG&A ($M, last 12 months): total selling, general and administrative expense from the latest filings, label this line exactly \"S.\". " +
+      "It is used only to cross-check items 8, 26 and 27, never in the calculation\n\n" +
       "=== MODEL SETTINGS (label these exactly M1 to M4, not with numbers) ===\n" +
       "These are modeling assumptions, not disclosed facts. Give your suggested value for this company, label it \"(suggestion)\" and say in a few words why.\n" +
       "M1. Pre-launch selling period (years): how many years before each launch the company would start spending on launch and selling preparation (often 1 to 2)\n" +
       "M2. Self-commercialized threshold (%): the company's share of a drug's sales at or above which it sells the drug itself rather than earning a royalty from a partner (50 means a drug it keeps half or more of counts as its own)\n" +
       "M3. Years to simulate: years from today until the last of its drugs' sales would have faded after patent expiry, between 3 and 40\n" +
-      "M4. Wind-down: answer Yes if the company would most likely stop its corporate overhead once it has nothing left to develop or sell, or No if it would keep operating (for example, a larger company with other businesses)\n\n" +
+      "M4. Wind-down: answer Yes if the company would most likely stop its corporate overhead once it has nothing left to develop or sell itself, or No if it would keep operating. " +
+      "Answer No if it would keep its own operations after its drugs launch through partners, for example manufacturing for a partner, selling in territories it kept, or running other businesses\n\n" +
       "=== PER PIPELINE ASSET (repeat this block for each " + scope + ") ===\n" +
-      "Cover EVERY drug that is already on the market or currently in Phase 1 or later with at least one disclosed clinical result " +
-      "or an active registrational pathway, this is the fixed inclusion bar, not a judgment call, so two separate " +
-      "runs of this prompt should list the same set of assets. List them in order from most to least advanced " +
-      "(marketed first, then by phase, then by expected catalyst date). Exclude only preclinical/IND-enabling programs.\n" +
+      "Cover EVERY drug program the company discloses on its website, pipeline page or filings, including preclinical and IND-enabling programs, " +
+      "so two separate runs of this prompt list the same set of assets. List them from most to least advanced (marketed first, then by phase, then by expected catalyst date). " +
+      "Give the full block for each one. For preclinical programs, use phase \"Preclinical\" and labeled estimates: the simulator adds them switched off, " +
+      "and the user decides whether to include them.\n" +
       "9. Asset name/code: just the name/code itself, e.g. \"BEAM-101\" (no source citation on this line)\n" +
       "10. Indication: pick the single closest match from this exact list: " + indicationListText + "\n" +
       "11. Current clinical phase: pick the single closest match from this exact list: " + phaseListText + " (pick \"Approved / Marketed\" if the drug is already approved and selling)\n" +
@@ -2465,17 +2668,12 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
       "give your own estimate labeled \"(estimate)\", anchored to a named comparable trial/company with its " +
       "phase and indication, and a low-high range. Only write exactly \"Not stated\" if no reasonable comparable " +
       "exists to anchor even an estimate to.\n" +
-      "22. Estimated profit margin (%) on THE COMPANY'S share of this asset's sales once commercial (item 24): operating margin after COGS, royalties paid AND the company's own selling/commercial " +
-      "costs of this product, NOT gross margin (the model relies on this margin to cover those costs after launch). If the company only receives a royalty " +
-      "on a partner's sales, its margin on that royalty income is close to 100% minus any royalties it passes on. Prefer, in order, (a) the company's own disclosed margin guidance for this " +
-      "asset or franchise, (b) a named analyst's published margin estimate, (c) a named comparable drug's actual " +
-      "disclosed or reported net margin in a similar modality (small molecule vs. biologic vs. cell/gene therapy " +
-      "matters here) and indication, labeled \"(estimate)\" with that comparable named. If it's (a) or (b), just " +
-      "say which. (d) If no named comparable exists either, give the typical net margin for this general " +
-      "modality/indication category instead of giving up, label it \"(estimate, generic modality-wide figure, " +
-      "not specific to this asset)\", and cite the basis. This generic figure must still be labeled as generic, " +
-      "never presented as if it were specific to this drug. Only write exactly \"Not stated\" if you cannot " +
-      "produce even that generic figure. This field is REQUIRED (no default).\n" +
+      "22. Estimated margin (%) on THE COMPANY'S share of this asset's sales once commercial (item 24): what is left after manufacturing (cost of goods), royalties the company pays out, " +
+      "and costs that grow with each patient (distribution fees, patient support programs). Do NOT subtract the sales force, marketing or market access: item 27 covers those as a yearly cost. " +
+      "Typical figures: about 80 to 90% for small molecules, 70 to 85% for biologics, lower for cell and gene therapies. If the company only receives a royalty on a partner's sales, " +
+      "its margin on that royalty income is close to 100% minus any royalties it passes on. Prefer, in order, (a) the company's disclosed gross margin or cost of goods for this product, " +
+      "(b) a named analyst's estimate, (c) a named comparable drug in a similar modality, labeled \"(estimate)\" with that comparable named, (d) the typical figure for this modality, " +
+      "labeled \"(estimate, generic modality-wide figure, not specific to this asset)\". Only write exactly \"Not stated\" if you cannot produce even that. This field is REQUIRED (no default).\n" +
       "23. Years for this asset's sales to fall to near zero after it loses exclusivity (item 18), as generics or biosimilars arrive: " +
       "prefer (a) company guidance, (b) a named analyst's erosion assumption, (c) a named comparable drug's actual post-exclusivity sales decline, labeled \"(estimate)\", " +
       "(d) the typical erosion period for this modality (small molecules usually lose most sales within about 1-2 years; biologics more slowly), " +
@@ -2483,23 +2681,35 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
       "24. Company's share of this asset's sales (%): 100 if the company sells the drug itself and keeps all sales; for a co-commercialization or profit split, its share; " +
       "if it has out-licensed the drug and only receives royalties, the royalty rate (e.g. 15). Cite the agreement (10-K or press release).\n" +
       "25. Milestone payments due to THE COMPANY from partners when this asset is approved or launched ($M, one-time total, not risk-adjusted): " +
-      "from the licensing agreement in the 10-K/10-Q or press releases; answer 0 if there is no partner or no approval milestone.\n" +
+      "only payments triggered by this asset's regulatory approval or commercial launch, from the licensing agreement in the company's filings or press releases. " +
+      "Do NOT include sales-based milestones, development milestones for other indications, payments already received, or an \"up to\" total for the whole deal. " +
+      "If the approval or launch portion is not broken out, answer 0 and say so. Answer 0 if there is no partner.\n" +
       "26. Pre-launch commercial spend THE COMPANY expects for this asset ($M total over roughly the 2 years before launch: sales force build, market access, launch marketing): " +
       "prefer company guidance, otherwise an estimate labeled \"(estimate)\" anchored to a named comparable launch of similar size; answer 0 if a partner pays " +
-      "for the launch or the drug is already on the market.\n\n" +
+      "for the launch or the drug is already on the market.\n" +
+      "27. Annual selling cost once launched ($M per year) THE COMPANY pays for this asset: its sales force, marketing and market access each year after launch, at full launch scale " +
+      "(the simulator charges it in full from launch to the patent cliff, then reduces it in step with sales). Prefer (a) the company's reported selling or marketing expense for this product " +
+      "(if it sells several products and reports one total, split it by revenue and say so), (b) company guidance such as a planned sales force size, with the cost worked out from it, " +
+      "(c) a named comparable launch of similar size, labeled \"(estimate)\". Answer 0 if a partner sells the drug and pays these costs. Do not include anything already in item 8 or item 26.\n\n" +
       "");
   }
   function buildPrompt() {
     var ticker = document.getElementById('promptTicker').value.trim() || '[TICKER]';
     var todayStr = new Date().toISOString().slice(0, 10);
     return "I'm researching the company behind ticker " + ticker + " for a biotech business simulator " +
-      "(possible revenue and profit scenarios, not a valuation or stock forecast). First confirm the company name behind this ticker and that it's a biotech/biopharma " +
-      "company; if it isn't, just say so instead of guessing at pipeline data. Treat today's date as " + todayStr + " " +
+      "(possible revenue and profit scenarios, not a valuation or stock forecast). The simulator only works for companies that develop or sell " +
+      "drugs (medicines or therapeutics: small molecules, biologics, cell and gene therapies, vaccines). First confirm the company name behind this ticker, " +
+      "then answer this line before anything else, labeled exactly like this:\n" +
+      "D. Develops or sells drugs: Yes or No, with a few words on what the company's main products are\n" +
+      "Answer No for companies whose business is research tools, lab instruments, diagnostics, medical devices, contract services or software, " +
+      "even if they call themselves biotech. If the answer is No, stop after line D and give nothing else. " +
+      "Treat today's date as " + todayStr + " " +
       "for every \"months from today\" figure below, so a re-run on a different day stays comparable. Please " +
       "search the web for current data and return it in the exact labeled format below.\n\n" +
       promptCore(todayStr, 'clinical program or marketed drug') +
       "Please output this as a clean labeled list in the order above, one line per item (never two numbered items on the same line), " +
-      "keep each item's number and label exactly as written above (do not renumber, merge or skip items), with the source " +
+      "keep each item's number and label exactly as written above (do not renumber, merge or skip items). If you need to correct a value, rewrite its numbered line " +
+      "instead of adding a correction note after the list. Give the source " +
       "noted in parentheses, formatted so I can copy each number straight into a form. If the company has " +
       "more than one material pipeline asset, repeat the \"PER PIPELINE ASSET\" section as a separate block " +
       "for each one, clearly labeled by asset name.";
@@ -2684,7 +2894,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     });
     // Fallback: loose keyword matches for common phase/indication shorthand
     if (!best) {
-      if (/phase\s*1\b/i.test(str)) best = 'phase1';
+      if (/pre-?clinical|ind[- ]enabling|discovery stage|pre-ind/i.test(str)) best = 'preclinical';
+      else if (/phase\s*1\b/i.test(str)) best = 'phase1';
       else if (/phase\s*2\b/i.test(str)) best = 'phase2';
       else if (/phase\s*3\b/i.test(str)) best = 'phase3';
       else if (/\bnda\b|\bbla\b|filed/i.test(str)) best = 'nda';
@@ -2723,8 +2934,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     ['a0', /asset name|name\/code/], ['a3', /next catalyst for this asset/], ['a1', /^indication\b/], ['a2', /clinical phase|^current phase|^phase\b/],
     ['a10', /penetration/], ['a4', /patient population/], ['a5', /net price/], ['a6', /this specific asset'?s next|asset'?s next data readout/],
     ['a7', /first commercial launch/], ['a8', /ramp years|launch to peak/], ['a14', /near zero/], ['a9', /exclusivity/],
-    ['a11', /remaining r&d/], ['a12', /trial burn|spend rate/], ['a13', /profit margin/], ['a15', /share of this asset'?s sales|company'?s share/],
-    ['a16', /milestone/], ['a17', /pre-launch commercial spend|pre-launch spend/],
+    ['a11', /remaining r&d/], ['a12', /trial burn|spend rate/], ['a13', /\bmargin\b/], ['a15', /share of this asset'?s sales|company'?s share/],
+    ['a16', /milestone/], ['a17', /pre-launch commercial spend|pre-launch spend/], ['a18', /annual selling cost|selling cost once launched|yearly selling cost/],
     // Short forms some answers use.
     ['a4', /^(target |addressable )?patients?\b/], ['a5', /^(annual |net )?price\b/], ['a7', /years to (first )?launch/],
     ['a9', /patent cliff|loss of exclusivity/], ['a12', /annual burn|burn rate/], ['a13', /^(gross |operating )?margin\b/]
@@ -2758,7 +2969,18 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     return stripped;
   }
 
+  var NOT_DRUG_RE = [
+    /\b(is not|isn't|is no longer)\s+an?\s+(biotech(nology)?|biopharma(ceutical)?|pharmaceutical|drug|therapeutics?)[\w\s\/-]{0,25}\b(company|developer|maker)\b/i,
+    // Narrow on purpose: "does not sell any drugs yet" or "has no approved
+    // products" describe a normal clinical-stage biotech and must not match.
+    /\bdoes(n't| not)\s+(develop|discover)\s+(any\s+)?(drugs|medicines|therapeutics|drug candidates|a drug pipeline|a therapeutic pipeline)\b/i,
+    /\b(has|have|with)\s+no\s+(drug|therapeutic)\s+(pipeline|candidates|programs)\b/i,
+    /\bnot\s+an?\s+(drug|therapeutics?)\s+(developer|company)\b/i,
+    /\brather than\s+(developing\s+)?(drugs|therapeutics|medicines)\b/i
+  ];
+  var CORRECTION_LABELS = { 2: 'tax-loss carryforwards', 3: 'total cash', 4: 'total debt', 5: 'months to catalyst', 6: 'tax rate', 7: 'interest expense', 8: 'overhead' };
   function parsePastedResearch(text) {
+    var drugAnswer = null, corrections = {};
     var company = {};
     var assetsOut = [];
     var currentAsset = null;
@@ -2800,6 +3022,15 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     }
     text.split('\n').forEach(function (rawLine) {
       var line = rawLine.replace(/^[\s#>*_-]+/, '');
+      // "Correction to item 8: ... Use 7.6" notes after the list (company items only).
+      var cm = line.replace(/\*/g, '').match(/^correction to item\s*(\d{1,2})\b[^]*?\buse\s+\$?\s*(-?[\d.,]+)/i);
+      if (cm && Number(cm[1]) >= 2 && Number(cm[1]) <= 8) { corrections[Number(cm[1])] = cm[2].replace(/,/g, ''); return; }
+      // "S. Reported SG&A" (lettered): used only for the cost cross-check.
+      var sl = line.match(/^S\\?[\.\):]\s*\**\s*reported\s+(sg&a|selling)[^:]*:\s*(.+)$/i);
+      if (sl) { var sv = extractNumber(valueAfterLabel(sl[0].replace(/\*/g, '')) || sl[2]); if (sv !== null && isFinite(sv)) company.reportedSGA = sv; return; }
+      // "D. Develops or sells drugs: Yes/No" (lettered, so numbering never shifts).
+      var dl = line.match(/^D\\?[\.\):]\s*\**\s*develops or sells drugs\**\s*:?\s*\**\s*(.+)$/i);
+      if (dl) { drugAnswer = /^\W*no\b/i.test(dl[1]) ? 'no' : (/^\W*yes\b/i.test(dl[1]) ? 'yes' : drugAnswer); return; }
       // Model settings are lettered M1-M4 so they never shift the numbered items.
       var ms = line.match(/^M\s*([1-4])\\?[\.\):]\s*(.+)$/i);
       if (ms) {
@@ -2838,9 +3069,23 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
           return;
         }
         var off = Number(key.slice(1));
-        if (off === 0) { currentAsset = {}; assetsOut.push(currentAsset); }
+        if (off === 0) {
+          // A new drug block starts only on a real item number (9 and up).
+          if (n >= 9) { currentAsset = {}; assetsOut.push(currentAsset); assetItem(0, val); }
+          return;
+        }
         if (!currentAsset) return;
+        // Guards against notes written after a drug block, e.g. "4. Patient
+        // populations: the figures are US-only": a value is never replaced by a
+        // blank, and a line numbered below 9 (drug items are 9 to 27) only fills
+        // a field that is still empty.
+        var keep = JSON.parse(JSON.stringify(currentAsset));
         assetItem(off, val);
+        Object.keys(keep).forEach(function (k) {
+          var had = keep[k] !== null && keep[k] !== undefined;
+          var now = currentAsset[k] !== null && currentAsset[k] !== undefined;
+          if (had && (!now || n < 9)) currentAsset[k] = keep[k];
+        });
         return;
       }
 
@@ -2884,12 +3129,22 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
         case 13: currentAsset.margin = extractNumber(val); currentAsset.marginIsEstimate = isEstimateLabeled(val); break;
         case 14: currentAsset.erosionYears = extractNumber(val, 'plain'); currentAsset.erosionYearsIsEstimate = isEstimateLabeled(val); break;
         case 15: currentAsset.salesShare = extractNumber(val); currentAsset.salesShareIsEstimate = isEstimateLabeled(val); break;
-        case 16: currentAsset.milestone = extractNumber(val); currentAsset.milestoneIsEstimate = isEstimateLabeled(val); break;
+        case 16:
+          currentAsset.milestone = extractNumber(val); currentAsset.milestoneIsEstimate = isEstimateLabeled(val);
+          // "…the approval portion is not broken out": the figure is a whole-deal total, not an approval milestone.
+          if (/not (broken out|split out|separately (disclosed|broken out|stated)|disclosed separately)/i.test(val)) { currentAsset.milestone = null; currentAsset.milestoneIsEstimate = false; }
+          break;
         case 17: currentAsset.prelaunchSpend = extractNumber(val); currentAsset.prelaunchSpendIsEstimate = isEstimateLabeled(val); break;
+        case 18: currentAsset.sellingCost = extractNumber(val); currentAsset.sellingCostIsEstimate = isEstimateLabeled(val); break;
       }
     }
 
-    return { company: company, assets: assetsOut };
+    // Answers without line D: treat clear statements that the company has no
+    // drugs as a No. Explicit "D. ... Yes" always wins.
+    if (drugAnswer === null && NOT_DRUG_RE.some(function (re) { return re.test(text); })) drugAnswer = 'no';
+    // A correction note replaces the value it corrects.
+    Object.keys(corrections).forEach(function (n) { companyItem(Number(n), CORRECTION_LABELS[n], corrections[n], company); });
+    return { company: company, assets: assetsOut, drugAnswer: drugAnswer };
   }
 
   function applyParsedResearch(parsed) {
@@ -2912,6 +3167,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     if (c.prelaunchYears !== undefined && c.prelaunchYears !== null) setIf(el.prelaunchYears, Math.max(0, c.prelaunchYears));
     if (c.selfSellShare !== undefined && c.selfSellShare !== null) setIf(el.selfSellShare, Math.min(100, Math.max(0, c.selfSellShare)));
     if (c.horizonMax !== undefined && c.horizonMax !== null) setIf(el.horizonMax, Math.min(40, Math.max(3, Math.round(c.horizonMax))));
+    if (c.reportedSGA !== null && c.reportedSGA !== undefined && isFinite(c.reportedSGA)) { el.reportedSGA.value = c.reportedSGA; coAi.reportedSGA = true; filledCount++; }
     if (c.windDown === 'yes' || c.windDown === 'no') { el.windDown.value = c.windDown; coAi.windDown = true; filledCount++; }
 
     var assetCount = 0;
@@ -2924,6 +3180,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
           name: pa.name || 'New Asset',
           indication: pa.indication || 'general',
           phase: pa.phase || 'phase2',
+          included: pa.phase !== 'preclinical',
           targetPatients: pa.targetPatients !== null && pa.targetPatients !== undefined ? pa.targetPatients : null,
           pricePerPatient: pa.pricePerPatient !== null && pa.pricePerPatient !== undefined ? clampOverride('pricePerPatient', pa.pricePerPatient) : null,
           // No figure from the AI: use the company's next catalyst (or 14 months), outlined red.
@@ -2944,6 +3201,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
           salesShare: has(pa.salesShare) ? clampOverride('salesShare', pa.salesShare) : 100,
           milestone: has(pa.milestone) ? clampOverride('milestone', pa.milestone) : 0,
           prelaunchSpend: has(pa.prelaunchSpend) ? clampOverride('prelaunchSpend', pa.prelaunchSpend) : 0,
+          sellingCost: has(pa.sellingCost) ? clampOverride('sellingCost', pa.sellingCost) : null,
+          sellingCostIsEstimate: has(pa.sellingCost) && !!pa.sellingCostIsEstimate,
           erosionYearsIsDefault: !has(pa.erosionYears), erosionYearsIsEstimate: has(pa.erosionYears) && !!pa.erosionYearsIsEstimate,
           salesShareIsDefault: !has(pa.salesShare), salesShareIsEstimate: has(pa.salesShare) && !!pa.salesShareIsEstimate,
           milestoneIsDefault: !has(pa.milestone), milestoneIsEstimate: has(pa.milestone) && !!pa.milestoneIsEstimate,
@@ -2978,7 +3237,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     });
     seen = {};
     assets.forEach(function (x) { var k = x.name.toLowerCase(); seen[k] = (seen[k] || 0) + 1; if (seen[k] > 1) x.name += ' ' + seen[k]; });
-    return { debt: (c.totalDebt !== null && c.totalDebt !== undefined && isFinite(c.totalDebt)) ? c.totalDebt : null, filledCount: filledCount, assetCount: assetCount, companyName: c.name || '' };
+    var preOff = assets.filter(function (x) { return x.phase === 'preclinical' && !x.included; }).length;
+    return { preclinicalOff: parsed.assets.length ? preOff : 0, debt: (c.totalDebt !== null && c.totalDebt !== undefined && isFinite(c.totalDebt)) ? c.totalDebt : null, filledCount: filledCount, assetCount: assetCount, companyName: c.name || '' };
   }
 
   document.getElementById('autoFillBtn').addEventListener('click', function () {
@@ -2990,6 +3250,14 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
       return;
     }
     var parsed = parsePastedResearch(text);
+    if (parsed.drugAnswer === 'no') {
+      var tick = document.getElementById('promptTicker').value.trim().toUpperCase();
+      var who = (parsed.company && parsed.company.name) ? parsed.company.name.replace(/\.+$/, '') : (tick || 'this company');
+      status.textContent = 'The AI\u2019s answer says ' + who + ' does not develop or sell drugs, so this simulator can\u2019t model it and nothing was filled in. ' +
+        'It only covers companies with drugs in development or on the market.';
+      status.style.color = 'var(--red)';
+      return;
+    }
     var result = applyParsedResearch(parsed);
     autoRevealOff = true; var model = recalcAll(); autoRevealOff = false;
     if (result.filledCount === 0 && result.assetCount === 0) {
@@ -2999,11 +3267,12 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
       status.textContent = (result.companyName ? 'Company identified by the AI: ' + result.companyName.replace(/\.+$/, '') + '. ' : '') + 'Filled ' + result.filledCount + ' field' + (result.filledCount === 1 ? '' : 's') +
         (result.assetCount ? ' and created ' + result.assetCount + ' pipeline asset' + (result.assetCount === 1 ? '' : 's') : '') +
         '. ';
+      if (result.preclinicalOff) status.textContent += result.preclinicalOff + ' preclinical program' + (result.preclinicalOff === 1 ? ' was' : 's were') + ' added switched off; tick On to include ' + (result.preclinicalOff === 1 ? 'it' : 'them') + '. ';
       if (result.debt !== null && result.debt > 0) status.textContent += 'The AI reported total debt of ' + fmtBig(result.debt) + ', which is not included in the results (see the note in Results). ';
       var ready = hasEnoughInputs(model), gaps = [];
       if (!ready) {
         if (model.missingCompany && model.missingCompany.length) gaps.push('company and model settings: ' + model.missingCompany.join(', '));
-        if (!assets.length) gaps.push('drugs: the answer had no drug figures (items 9 to 26), so add the drugs yourself or ask the AI to fill those items for each drug');
+        if (!assets.length) gaps.push('drugs: the answer had no drug figures (items 9 to 27), so add the drugs yourself or ask the AI to fill those items for each drug');
         else if (model.agg && model.agg.missingCostAsset) gaps.push('drugs: some figures are missing (outlined in red in the pipeline table)');
         else if (!assets.some(function (x) { return x.included; })) gaps.push('drugs: none is switched on');
       }
@@ -3197,7 +3466,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
       a.pricePerPatient = vpp === null || !isFinite(vpp) ? null : clampOverride('pricePerPatient', vpp);
     } else {
       var v = parseFloat(e.target.value);
-      a[field] = isFinite(v) ? v : 0;
+      a[field] = isFinite(v) ? (field === 'monthsToCatalyst' ? Math.max(0, v) : v) : 0;
       if (field === 'monthsToCatalyst') a.monthsToCatalystIsDefault = false;
     }
     recalcAll();
@@ -3620,6 +3889,201 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   function route() { var h = ''; try { h = window.location.hash; } catch (err) {} showView(h === '#legal' ? 'legal' : h === '#methodology' ? 'method' : 'app'); }
   try { window.addEventListener('hashchange', route); } catch (err) {}
 
+
+
+
+  /* ============================================================
+     PHONE VIEW: FOLDS
+     Long explanations collapse behind a small toggle in the phone view
+     only (CSS hides the toggles on desktop). Text and behaviour are
+     unchanged; this is layout.
+     ============================================================ */
+  var phFoldOpen = {};
+  function phFoldBtn(key, label) {
+    var open = !!(phFoldOpen && phFoldOpen[key]);
+    return '<button type="button" class="ph-fold-btn" data-fold-key="' + key + '" aria-expanded="' + open + '">' + label + '</button>';
+  }
+  function phFoldCls(key) { return 'ph-fold' + (phFoldOpen && phFoldOpen[key] ? ' ph-open' : ''); }
+  (function setupPhoneFolds() {
+    var n = 0;
+    document.querySelectorAll('[data-ph-fold]').forEach(function (el) {
+      var key = 'static' + (n++);
+      el.classList.add('ph-fold');
+      el.insertAdjacentHTML('beforebegin', phFoldBtn(key, el.getAttribute('data-ph-fold')));
+    });
+    document.addEventListener('click', function (e) {
+      var b = e.target.closest('.ph-fold-btn');
+      if (b) {
+        var t = b.nextElementSibling;
+        if (!t || !t.classList.contains('ph-fold')) return;
+        var open = !t.classList.contains('ph-open');
+        t.classList.toggle('ph-open', open);
+        b.setAttribute('aria-expanded', open ? 'true' : 'false');
+        phFoldOpen[b.getAttribute('data-fold-key')] = open;
+        if (open && t.id === 'promptText') try { t.style.height = ''; } catch (err) {}
+        return;
+      }
+      var m = e.target.closest('.ph-more');
+      if (m) {
+        var box = m.closest('.ph-trunc');
+        var o = !box.classList.contains('ph-open');
+        box.classList.toggle('ph-open', o);
+        m.textContent = o ? 'Less' : 'More';
+        m.setAttribute('aria-expanded', o ? 'true' : 'false');
+      }
+    });
+  })();
+
+  /* ============================================================
+     HOVER EXPLANATIONS
+     One bubble, shown on hover or keyboard focus, or by tapping the
+     small "i" button (phones have no hover). Text only: nothing here
+     touches the calculations.
+     ============================================================ */
+  var TIPS = {
+    // Company figures
+    totalCash: 'Cash, cash equivalents and short-term investments on the latest balance sheet (10-K or 10-Q). This is where the cash balance starts and the basis of the cash runway.',
+    monthsToCatalyst: 'Months from today until the company’s next major event, such as a trial readout or an approval decision. Only used to warn you if the cash runway is shorter than this.',
+    baseOverhead: 'Yearly general and administrative cost (G&A): management, finance, legal, offices. Leave out R&D and selling or marketing; each drug’s own costs cover those.',
+    taxRate: 'Tax on profit once past losses are used up. Use the company’s disclosed expected rate if there is one; otherwise about 21% US federal plus state tax (often 24 to 26% in total). Here past losses offset profit in full; US rules cap that at 80% of profit for losses since 2018, so tax in the first profitable years may be a little higher in reality.',
+    nolCarry: 'The company’s existing pool of past tax losses (net operating loss carryforwards), found in the income tax note of the 10-K or 20-F. Profit is offset by this pool before any tax is charged. Losses made inside the simulation are added to it.',
+    reportedSGA: 'Selling, general and administrative expense over the last 12 months, from the income statement. Optional and never used in the calculation: it only checks that overhead plus selling costs add up to roughly what the company actually spends.',
+    interestExpense: 'What the company pays each year on borrowed money (loans, convertible notes, bonds), from the income statement. Subtracted every year and counted in the cash runway. Repaying the debt itself is not included. Enter 0 if there is no debt.',
+    // Model settings
+    prelaunchYears: 'How many years before each launch the drug’s pre-launch selling spend is spread out, evenly. Typically 1 to 2 years.',
+    selfSellShare: 'If the company keeps at least this share of a drug’s sales, it is treated as selling the drug itself: that drug keeps the company running and needs a yearly selling cost. Below it, the drug counts as royalty income from a partner.',
+    horizonMax: 'The longest period the results cover, in years from today.',
+    windDown: 'Yes: overhead stops once the company has nothing left to develop or sell. No: overhead is charged every year, for example because the company keeps operating through partners.',
+    // Pipeline table
+    th_on: 'Untick to leave this drug out of every calculation.',
+    th_asset: 'The drug or program name. Click ƒx to see and edit its timing, costs and the calculation.',
+    th_phase: 'Development stage. Only “Approved / Marketed” changes the maths: such a drug is always counted and cannot be switched to fail.',
+    th_patients: 'Diagnosed patients in the population the drug targets. For a one-time treatment (such as a gene therapy), newly eligible patients per year. Peak sales = patients × peak penetration × price per patient.',
+    th_price: 'Yearly net price per treated patient, in dollars. For a one-time treatment, the one-time price.',
+    th_months: 'Months from today until this drug’s next readout. A drug assumed to fail stops spending here.',
+    th_peak: 'Yearly sales at peak if approved: patients × peak penetration × price. This is total drug sales, before the company’s share.',
+    th_life: 'Total company revenue from this drug if approved, including the fade after the patent cliff.',
+    // Drug details
+    penetrationOverride: 'Share of the target patients who are treated with this drug at peak. Required, no default.',
+    marginOverride: 'Share of the company’s sales kept after manufacturing, royalties paid out and per-patient costs. Leave the sales force out; the yearly selling cost covers it. Often 80 to 90% for small molecules, 70 to 85% for biologics. Required, no default.',
+    remainingRnDOverride: 'Total development spending still to come for this drug before launch, in $M. Required, no default.',
+    annualBurnOverride: 'What this drug costs per year until its next readout, in $M. Counted in the cash runway. Required, no default.',
+    yearsToLaunch: 'Years from today until sales start, if approved. 0 means it is already on sale.',
+    rampYears: 'Years from launch until sales reach their peak.',
+    exclusivityYears: 'Years from today until the drug loses patent or market protection and sales start to fade.',
+    erosionYears: 'Years for sales to fall to zero after the patent cliff. 0 means sales stop at the cliff.',
+    salesShare: 'Share of the drug’s sales that is the company’s revenue: 100% if it sells the drug itself, or the royalty rate if a partner sells it.',
+    milestone: 'One-time payment to the company in the launch year, if approved (approval and launch milestones only). 0 if the company does not disclose them separately.',
+    prelaunchSpend: 'Launch preparation spending before launch, in $M in total, spread over the pre-launch selling period.',
+    sellingCost: 'Yearly cost of the sales force, marketing and market access once the drug is launched. Charged in full until the patent cliff, then fades with sales. Only needed if the company sells the drug itself.'
+  };
+  var TH_TIP_KEYS = ['th_on', 'th_asset', 'th_phase', 'th_patients', 'th_price', 'th_months', 'th_peak', 'th_life'];
+  function tipIcon(key, name) {
+    if (!TIPS || !TIPS[key]) return '';
+    return '<button type="button" class="tip-i" data-tip="' + key + '" aria-label="About ' + escapeHtml(name || 'this field') + '">i</button>';
+  }
+  // The "i" is glued to the last word of the label so a wrapping label never leaves it alone on a line.
+  function labelWithTip(key, label) {
+    if (!TIPS || !TIPS[key]) return '<label>' + label + '</label>';
+    var icon = tipIcon(key, label.replace(/<[^>]*>/g, ''));
+    var m = label.match(/^([\s\S]*?)(\S+)$/);
+    return '<label data-tip="' + key + '"><span class="lbl-txt">' + (m ? m[1] + '<span class="tip-nb">' + m[2] + icon + '</span>' : label + icon) + '</span></label>';
+  }
+  function attachTip(host, key, name) {
+    var icon = document.createElement('span');
+    icon.innerHTML = tipIcon(key, name);
+    icon = icon.firstChild;
+    if (!icon) return;
+    // Last text node with words in it, before any "(optional)" note.
+    var opt = host.querySelector('.opt'), node = opt ? opt.previousSibling : host.lastChild;
+    while (node && !(node.nodeType === 3 && /\S/.test(node.nodeValue))) node = node.previousSibling;
+    if (!node) { host.insertBefore(icon, opt || null); return; }
+    var txt = node.nodeValue.replace(/\s+$/, ''), m = txt.match(/^([\s\S]*?)(\S+)$/);
+    var wrap = document.createElement('span');
+    wrap.className = 'tip-nb';
+    wrap.textContent = m[2];
+    wrap.appendChild(icon);
+    node.nodeValue = m[1];
+    node.parentNode.insertBefore(wrap, node.nextSibling);
+  }
+  (function setupTips() {
+    Object.keys(TIPS).forEach(function (k) {
+      var lab = document.querySelector('label[for="' + k + '"]');
+      if (!lab) return;
+      lab.setAttribute('data-tip', k);
+      attachTip(lab, k, lab.textContent.replace(/\(optional.*\)/, '').trim());
+    });
+    var ths = document.querySelectorAll('#pipelineTable thead th');
+    TH_TIP_KEYS.forEach(function (k, i) {
+      var th = ths[i];
+      if (!th) return;
+      th.removeAttribute('title');
+      th.setAttribute('data-tip', k);
+      attachTip(th, k, th.textContent.trim());
+    });
+    var bubble = document.createElement('div');
+    bubble.id = 'tipBubble';
+    bubble.setAttribute('role', 'tooltip');
+    document.body.appendChild(bubble);
+    var shownFor = null, pinned = false;
+    function show(el) {
+      var key = el.getAttribute('data-tip');
+      if (!TIPS[key]) return;
+      shownFor = el;
+      bubble.textContent = TIPS[key];
+      bubble.classList.add('show');
+      var icon = el.classList.contains('tip-i') ? el : el.querySelector('.tip-i');
+      if (icon) icon.setAttribute('aria-describedby', 'tipBubble');
+      var r = el.getBoundingClientRect(), vw = document.documentElement.clientWidth, vh = window.innerHeight;
+      var bw = Math.min(300, vw - 16);
+      bubble.style.maxWidth = bw + 'px';
+      var b = bubble.getBoundingClientRect();
+      var left = Math.max(8, Math.min(r.left, vw - b.width - 8));
+      var top = r.bottom + 6;
+      if (top + b.height > vh - 8 && r.top - b.height - 6 > 8) top = r.top - b.height - 6;
+      bubble.style.left = left + 'px';
+      bubble.style.top = top + 'px';
+    }
+    function hide() {
+      if (shownFor) { var i = shownFor.classList.contains('tip-i') ? shownFor : shownFor.querySelector('.tip-i'); if (i) i.removeAttribute('aria-describedby'); }
+      shownFor = null; pinned = false;
+      bubble.classList.remove('show');
+    }
+    document.addEventListener('mouseover', function (e) {
+      if (pinned) return;
+      var t = e.target.closest('[data-tip]');
+      if (t) { if (t !== shownFor) show(t); }
+      else if (shownFor) hide();
+    });
+    document.addEventListener('focusin', function (e) {
+      if (e.target.classList && e.target.classList.contains('tip-i')) show(e.target);
+    });
+    document.addEventListener('focusout', function (e) {
+      if (!pinned && e.target.classList && e.target.classList.contains('tip-i')) hide();
+    });
+    // Tapping the "i" pins the bubble open (and toggles it); any other tap closes it.
+    document.addEventListener('click', function (e) {
+      var i = e.target.closest('.tip-i');
+      if (i) {
+        e.preventDefault(); e.stopPropagation();
+        var same = shownFor && (shownFor === i || shownFor.contains(i));
+        if (same && pinned) hide(); else { show(i); pinned = true; }
+        return;
+      }
+      if (pinned) hide();
+    }, true);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && shownFor) hide(); });
+    // Follow the field while the page scrolls; close if it has gone off screen or been redrawn away.
+    function follow() {
+      if (!shownFor) return;
+      if (!document.body.contains(shownFor)) { hide(); return; }
+      var r = shownFor.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > window.innerHeight) { hide(); return; }
+      var keep = pinned; show(shownFor); pinned = keep;
+    }
+    window.addEventListener('scroll', follow, { passive: true });
+    window.addEventListener('resize', follow);
+  })();
 
   /* ============================================================
      INIT
