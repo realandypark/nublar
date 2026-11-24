@@ -956,6 +956,7 @@
   .legal-back{ display:inline-block; color:var(--text-dim); font-size:13px; text-decoration:none; }
   .legal-back:hover{ color:var(--text); text-decoration:underline; }
   .legal-licence{ background:var(--panel); border:1px solid var(--border); border-radius:4px; padding:12px 14px; font-family:var(--mono); font-size:11px; line-height:1.55; color:var(--text-faint); white-space:pre-wrap; margin:8px 0 0; }
+
 </style>
 </head>
 <body>
@@ -1104,7 +1105,7 @@
       <div class="sc-chips" id="scChips"></div>
       <p class="sc-chance prose" id="scChance"></p>
       <div class="kpi-strip kpi-5" id="scKpis"></div>
-      <div class="debt-note prose ph-trunc" id="debtNote"><b>Debt is not included.</b><span class="ph-rest"> These results count only the interest expense you entered. If the company has debt, repaying or refinancing it would reduce the cash shown here and could change the funding it needs, so check its debt and when it falls due.</span> <button type="button" class="ph-more" aria-expanded="false">More</button></div>
+      <div class="debt-note prose ph-trunc" id="debtNote"><b>Hypothetical, from your inputs. Debt is not included.</b><span class="ph-rest"> These results describe the simulated business only. They do not predict that the real company will earn a profit, need funding or run out of cash. They count only the interest expense you entered. If the company has debt, repaying or refinancing it would reduce the cash shown here and could change the funding it needs, so check its debt and when it falls due.</span> <button type="button" class="ph-more" aria-expanded="false">More</button></div>
 
       <div class="chart-block">
         <div class="chart-title" id="revChartTitle">Yearly revenue and net income</div>
@@ -1158,9 +1159,10 @@
 
   <footer>
     <strong style="color:var(--text-dim); display:block; margin-bottom:8px;">Disclaimer</strong>
-    <p style="margin:0 0 10px;">Project Nublar is an educational biotech scenario simulator. It is not investment, financial, tax, legal, accounting, medical or regulatory advice, and nothing here is a recommendation to buy, sell or hold any security. Every result is a hypothetical calculation from figures you enter or paste and from your own assumptions about which drugs are approved; none is a forecast or a valuation. AI-suggested figures can be wrong. Project Nublar is not affiliated with any company shown and is provided "as is", without warranties, with liability limited to the extent permitted by law.</p>
+    <p style="margin:0 0 10px;">Project Nublar is an educational biotech scenario simulator. It is not investment, financial, tax, legal, accounting, medical or regulatory advice, and nothing here is a recommendation to buy, sell or hold any security. Every result is a hypothetical calculation from figures you enter or paste and from your own assumptions about which drugs are approved; none is a forecast or a valuation. AI-suggested figures can be wrong. Results are not medical or clinical information and must not be used in offering, fundraising or investor materials. Project Nublar is not affiliated with any company shown and is provided "as is", without warranties, with liability limited to the extent permitted by law.</p>
+    <p style="margin:0 0 10px; color:var(--text);"><b>By using Project Nublar you agree to the <a href="#legal" data-open-legal>Disclaimer and terms of use</a>.</b></p>
     <p style="margin:0;"><a href="#legal" data-open-legal>Read the full disclaimer and terms of use</a> and the <a href="#methodology" data-open-method>methodology</a>, including the model's known limitations, privacy and open-source licences (Chart.js and @kurkle/color, MIT License).</p>
-    <p style="margin:10px 0 0;" id="saveNote">Your tabs are saved only in this browser, on this device, and are never sent anywhere. <a href="#" data-clear-saved>Erase saved data</a></p>
+    <p style="margin:10px 0 0;" id="saveNote">Your tabs are saved only in this browser, on this device, and are never sent anywhere. <a href="#" data-clear-saved>Erase saved data</a> · <a href="#" data-count-toggle>Don't count my visits</a></p>
   </footer>
 </div>
 
@@ -1314,55 +1316,55 @@
   <a class="legal-back" href="#" data-close-legal>&larr; Back to the simulator</a>
   <h1>Disclaimer and terms of use</h1>
   <p class="legal-date">Last updated: 24 November 2026</p>
-  <p>Please read this before using Project Nublar or sharing anything it produces. By using the simulator you agree to these terms. If you do not agree, do not use it.</p>
+  <p>Please read this before using Project Nublar or sharing anything it produces. By using the simulator you agree to these terms. If you do not accept them, please do not use the simulator.</p>
 
   <h2>1. What this tool is</h2>
   <p>Project Nublar is a free educational biotech scenario simulator, provided for illustrative purposes. It shows the revenue, profit and cash that would follow from the figures you enter and from your own assumptions about which drugs are approved and which fail. Assuming a drug is approved in the simulator says nothing about whether any regulator will approve it. It does not estimate the probability of any outcome, value any company or security, or forecast real-world results.</p>
 
-  <h2>2. Not investment advice</h2>
+  <h2>2. Who may use it</h2>
+  <p>Use Project Nublar for lawful, personal and educational purposes, and follow the laws that apply to you, including securities laws. If you are under 18, please use it with a parent, guardian or teacher.</p>
+
+  <h2>3. Not investment advice</h2>
   <ul>
     <li>Nothing in Project Nublar is investment, financial, tax, accounting, legal, medical, scientific or regulatory advice, or a recommendation, offer or solicitation to buy, sell or hold any security or other financial product.</li>
     <li>Project Nublar and its authors are not a registered investment adviser, broker-dealer or licensed financial investment business in any jurisdiction, including Korea and the United States.</li>
-    <li>The simulator does not consider your financial situation, objectives or risk tolerance. It cannot give individual investment advice and does not manage money.</li>
-    <li>Investing in securities, especially biotechnology companies, carries risk, including the loss of your entire investment. Any loss is yours alone. Talk to a licensed professional before making investment decisions.</li>
+    <li>Using the simulator does not create an adviser or client relationship with the authors, and it does not consider your financial situation or goals.</li>
+    <li>Do not use its output to advise others or in fundraising, investor or offering materials.</li>
+    <li>Investing in securities, especially biotechnology companies, carries risk, including the loss of your entire investment. Any decision you make is yours alone, and so is any loss. Talk to a licensed professional before making investment decisions.</li>
   </ul>
 
-  <h2>3. Hypothetical results only</h2>
+  <h2>4. Hypothetical results only</h2>
   <ul>
     <li>Every result is a hypothetical calculation from inputs you control. It reflects your assumptions, not the authors' view of any company or drug.</li>
     <li>Clinical, regulatory and commercial outcomes are uncertain. No scenario should be read as likely, expected or predicted.</li>
-    <li>The results of comparable drugs or companies say nothing reliable about future results.</li>
+    <li>A result such as "outside funding needed" or "cash runs out" describes the simulated business under your inputs. It is not a statement that the real company will need funding, run out of cash, earn a profit or reach any milestone.</li>
   </ul>
 
-  <h2>4. Your inputs and AI suggestions</h2>
+  <h2>5. Not medical or scientific information</h2>
+  <p>Patient numbers, prices, approval assumptions and timelines in the simulator are inputs for a business calculation. They are not medical, clinical, scientific or regulatory information, say nothing about whether a drug is safe or works, and must never be used to make decisions about anyone's health or treatment.</p>
+
+  <h2>6. Your inputs and AI suggestions</h2>
   <ul>
     <li>You are responsible for every figure you enter or accept. Figures are not checked or verified by Project Nublar.</li>
-    <li>The optional research prompt is a convenience. AI answers can be wrong, incomplete, out of date or invented. The authors do not control, endorse or partner with any AI service. Check every suggested figure against primary sources such as company filings.</li>
-    <li>Using an AI service is subject to that service's own terms, which you are responsible for following.</li>
+    <li>The optional research prompt is a convenience. AI answers can be wrong, incomplete, out of date or invented. The authors do not endorse or partner with any AI service. Check every suggested figure against primary sources such as company filings.</li>
     <li>Automatic form filling reads AI answers by pattern matching and can put a figure in the wrong field. Review every value after pasting.</li>
-    <li>Model settings the AI suggests (pre-launch period, self-commercialized threshold, years to simulate, wind-down) are assumptions, not facts about the company.</li>
   </ul>
 
-  <h2>5. Known limitations of the model</h2>
+  <h2>7. Known limitations of the model</h2>
   <p>The simulator simplifies how a biotech business works. In particular:</p>
   <ul>
     <li>No discounting: a dollar in a future year counts the same as a dollar today.</li>
     <li>A drug marked as failing stops spending at its next readout. Failing in a later phase would cost more, so failure scenarios show the lowest cost of failing.</li>
     <li>Debt is not included: only the interest expense you enter is counted. Repaying or refinancing debt would reduce the cash shown. No new financing, share issuance or dilution is modeled.</li>
-    <li>Tax losses offset all taxable profit. Some jurisdictions limit this (the United States caps it at 80%), so taxes in profitable years may be understated.</li>
-    <li>The patent cliff is counted from today, not from launch.</li>
-    <li>Years are 12-month periods starting today, not calendar or fiscal years.</li>
-    <li>Corporate overhead is constant, and each drug is treated independently of the others.</li>
+    <li>Tax losses offset all taxable profit. Some countries limit this, so taxes in profitable years may be understated.</li>
     <li>Revenue follows a simplified shape: a straight ramp to peak, flat until the patent cliff, then a straight fade. Prices, costs and market size do not change over time.</li>
-    <li>Each drug's selling costs are one flat yearly amount from launch, falling with sales after the patent cliff: an approximation of how a sales force is really paid.</li>
-    <li>Drugs already on the market follow the same inputs as any other drug, so their ramp is counted from today.</li>
   </ul>
-  <p>The <a href="#methodology" data-open-method>methodology</a> explains every calculation and input.</p>
+  <p>The <a href="#methodology" data-open-method>methodology</a> explains every calculation and lists the other simplifications.</p>
 
-  <h2>6. Companies, names and trademarks</h2>
-  <p>Company names, tickers and drug names appear only because you entered or pasted them, to identify what you are simulating. They belong to their respective owners. Project Nublar is not affiliated with, sponsored by or endorsed by any company, drug developer, stock exchange or AI provider.</p>
+  <h2>8. Companies, names and trademarks</h2>
+  <p>Company names, tickers and drug names appear only because you entered or pasted them, to identify what you are simulating. They belong to their respective owners. Project Nublar is not affiliated with, sponsored by or endorsed by any company, drug developer, stock exchange or AI provider. Companies, drugs and figures shown in examples, screenshots and promotional material are made up; any resemblance to a real company or product is unintended.</p>
 
-  <h2>7. Sharing results</h2>
+  <h2>9. Sharing results</h2>
   <p>If you share a screenshot or any other output:</p>
   <ul>
     <li>Present it as a hypothetical simulation based on your own inputs, not as a forecast, valuation, recommendation or the authors' opinion.</li>
@@ -1371,19 +1373,23 @@
     <li>You alone are responsible for what you share and for how others use it.</li>
   </ul>
 
-  <h2>8. Privacy</h2>
-  <p>The calculations run entirely in your browser. The simulator does not collect or send anything you enter or paste, and it sets no cookies. So that your open tabs survive a refresh, your inputs, pasted text and your choice of phone or desktop view are saved in this browser's own local storage on your device. They are never sent to us or to anyone else, and other people can only see them if they use the same browser profile, so avoid saving sensitive information on a shared computer. You can <a href="#" data-clear-saved>Erase saved data</a> at any time; clearing your browser's site data also removes it. The website hosting this page may keep standard access logs under its own policies. To see how many people use the simulator, we count anonymous visits with Cloudflare Web Analytics, which sets no cookies and does not track you across sites. It receives basic visit information, such as the page address, the site you came from, your browser and device type and your approximate country, but never anything you enter or paste. Cloudflare handles this information under its own privacy policy, and an ad blocker may stop the count.</p>
+  <h2>10. Third-party services</h2>
+  <p>The simulator may refer to, or rely on, services run by others, such as AI services you choose to use, the website host and Cloudflare Web Analytics. Those services follow their own terms and privacy policies. The authors do not control them and are not responsible for their content, availability or how they handle your information.</p>
 
-  <h2>9. No warranty</h2>
-  <p>Project Nublar is provided "as is" and "as available", without warranties of any kind, express or implied, including warranties of accuracy, completeness, reliability, availability, merchantability, fitness for a particular purpose and non-infringement. The authors may change, suspend or withdraw the simulator at any time without notice.</p>
+  <h2>11. Privacy</h2>
+  <p>The calculations run entirely in your browser. The simulator does not collect or send anything you enter or paste, and it sets no cookies. So that your open tabs survive a refresh, your inputs, pasted text and your choice of phone or desktop view are saved in this browser's own local storage on your device. They are never sent to us or to anyone else, and other people can only see them if they use the same browser profile, so avoid saving sensitive information on a shared computer. You can <a href="#" data-clear-saved>Erase saved data</a> at any time; clearing your browser's site data also removes it. The website hosting this page may keep standard access logs under its own policies.</p>
+  <p>To see how many people use the simulator, we count anonymous visits with Cloudflare Web Analytics, which sets no cookies and does not track you across sites. It receives basic visit information, such as the page address, the site you came from, your browser and device type, your approximate country and how quickly the page loaded, but never anything you enter or paste. As with any request to a website, Cloudflare also sees your IP address; it says it does not use it to identify or track visitors. Cloudflare handles this information under its own privacy policy. Visits are not counted at all if your browser sends a Do Not Track or Global Privacy Control signal. You can turn the count off for this browser at any time with this link: <a href="#" data-count-toggle>Don't count my visits</a>. This browser then stops loading the counter from your next visit, and the choice is kept in its local storage. Erasing saved data does not undo it, but clearing your browser's site data does.</p>
 
-  <h2>10. Limitation of liability</h2>
-  <p>To the fullest extent permitted by applicable law, the authors are not liable for any direct, indirect, incidental, consequential, special or punitive loss or damage, including trading or investment losses, lost profits or lost data, arising from the use of, inability to use, or reliance on the simulator or its outputs, even if advised of the possibility of such loss. Nothing in these terms excludes or limits any liability that cannot be excluded or limited under applicable law, including liability for intentional misconduct or gross negligence.</p>
+  <h2>12. No warranty</h2>
+  <p>Project Nublar is provided "as is" and "as available", without warranties of any kind, express or implied, including warranties of accuracy, completeness, reliability, availability, merchantability, fitness for a particular purpose and non-infringement. The calculations may contain errors. The authors may change, suspend or withdraw the simulator at any time without notice.</p>
 
-  <h2>11. Changes to these terms</h2>
-  <p>These terms may be updated at any time; the date at the top shows the latest version. Continuing to use the simulator after a change means you accept the updated terms. If any part of these terms is found unenforceable, the rest remains in effect.</p>
+  <h2>13. Limitation of liability</h2>
+  <p>To the fullest extent permitted by applicable law, the authors are not liable for any direct, indirect, incidental, consequential, special or punitive loss or damage, including trading or investment losses, lost profits or lost data, arising from the use of, inability to use, or reliance on the simulator or its outputs, even if advised of the possibility of such loss. Because the simulator is free, the authors' total liability for any claim, to the extent it cannot be excluded, is limited to the amount you paid to use it, which is nothing. Nothing in these terms excludes or limits any liability that cannot be excluded or limited under applicable law, including liability for intentional misconduct or gross negligence, or any rights you have as a consumer that cannot be waived.</p>
 
-  <h2>12. Open-source licences</h2>
+  <h2>14. Changes to these terms</h2>
+  <p>These terms may be updated at any time; the date at the top shows the latest version. Continuing to use the simulator after a change means you accept the updated terms. If any part of these terms turns out not to apply, the rest still does.</p>
+
+  <h2>15. Open-source licences</h2>
   <p>This page includes Chart.js (copyright 2014-2024 Chart.js Contributors) and @kurkle/color (copyright 2023 Jukka Kurkela), both released under the MIT License:</p>
   <pre class="legal-licence">Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -4233,6 +4239,33 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 })();
 
 </script>
-<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "8a9148075d0a46949a9fcb944839a8bf"}'></script><!-- End Cloudflare Web Analytics -->
+<script>
+/* Visit counter (Cloudflare Web Analytics). Not loaded if the visitor opted out
+   or the browser sends Do Not Track / Global Privacy Control. */
+(function () {
+  var KEY = 'projectNublar.noCount';
+  function get() { try { return window.localStorage.getItem(KEY) === '1'; } catch (e) { return false; } }
+  function set(v) { try { if (v) window.localStorage.setItem(KEY, '1'); else window.localStorage.removeItem(KEY); } catch (e) {} }
+  var nav = window.navigator || {};
+  var signal = nav.globalPrivacyControl === true || nav.doNotTrack === '1' || nav.doNotTrack === 'yes' || window.doNotTrack === '1' || nav.msDoNotTrack === '1';
+  function label() {
+    var txt = signal ? 'Visits not counted (browser privacy signal)' : (get() ? 'Visits not counted · Count them again' : 'Don\u2019t count my visits');
+    document.querySelectorAll('[data-count-toggle]').forEach(function (a) { a.textContent = txt; });
+  }
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('[data-count-toggle]'); if (!a) return;
+    e.preventDefault(); if (signal) return;
+    set(!get()); label();
+  });
+  label();
+  if (!signal && !get()) {
+    var s = document.createElement('script');
+    s.type = 'module';
+    s.src = 'https://static.cloudflareinsights.com/beacon.min.js';
+    s.setAttribute('data-cf-beacon', '{"token": "8a9148075d0a46949a9fcb944839a8bf"}');
+    document.body.appendChild(s);
+  }
+})();
+</script>
 </body>
 </html>
