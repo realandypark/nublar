@@ -572,6 +572,8 @@
   .chart-note{ font-size:12.5px; color:var(--text-dim); }
   .flag-legend{ font-size:12px; margin-top:8px; }
   .field .unit{ white-space:nowrap; }
+  .field-row .unit:last-child{ min-width:34px; text-align:left; }
+  .field-row .unit:first-child:not(:last-child){ min-width:10px; }
   footer{ padding-left:0; padding-right:0; margin-top:56px; }
   /* Drawer fields sit inside table.assets; don't let the table's input
      box style draw a second border inside the field's own box. */
@@ -880,9 +882,12 @@
   /* Phone: same rule on the cards: every box the same height, no extra padding around flagged ones. */
   html.phone #assetsBody tr[data-id] input[type="text"], html.phone #assetsBody tr[data-id] input[type="number"], html.phone #assetsBody tr[data-id] select{ height:42px; min-height:42px; }
   html.phone #assetsBody tr[data-id] > td:nth-child(4){ text-align:left !important; }
+  /* Phone cards: every box starts and ends on the same two columns; all values left-aligned. */
+  html.phone #assetsBody tr[data-id] > td:nth-child(9){ justify-self:end; }
+  html.phone #assetsBody tr[data-id] input[type="number"]{ text-align:left !important; }
   /* ---------- Phone: compact drug cards ---------- */
   html.phone #assetsBody tr[data-id]{ grid-template-columns:28px minmax(0,1fr) 28px minmax(0,1fr) !important;
-    grid-template-areas:"on name name act" "phase phase mon mon" "pat pat price price" "peak peak life life" !important;
+    grid-template-areas:"on name act act" "phase phase mon mon" "pat pat price price" "peak peak life life" !important;
     gap:8px 10px !important; padding:12px 10px !important; }
   html.phone #assetsBody tr[data-id] > td:nth-child(n+3):nth-child(-n+8)::before{ font-size:11px; margin-bottom:3px; }
   html.phone #assetsBody tr[data-id] > td:nth-child(6)::before{ content:"Months to catalyst"; }
