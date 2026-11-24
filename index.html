@@ -1036,6 +1036,7 @@
           <div class="field"><label for="taxRate">Tax rate once profitable</label><div class="field-row"><input type="number" id="taxRate" value="" step="1" min="0" max="100"><span class="unit">%</span></div></div>
           <div class="field"><label for="nolCarry">Tax-loss carryforward</label><div class="field-row"><span class="unit">$</span><input type="number" id="nolCarry" value="" step="1" min="0"><span class="unit">M</span></div></div>
           <div class="field"><label for="reportedSGA">Reported SG&amp;A</label><div class="field-row"><span class="unit">$</span><input type="number" id="reportedSGA" value="" step="1" min="0" placeholder="Optional"><span class="unit">M</span></div></div>
+          <div class="field"><label for="reportedRnD">Reported R&amp;D</label><div class="field-row"><span class="unit">$</span><input type="number" id="reportedRnD" value="" step="1" min="0" placeholder="Optional"><span class="unit">M</span></div></div>
       </div>
     </div>
     <p class="disclaimer-note" data-ph-fold="What each figure includes" data-fold-desktop>Corporate overhead is general and administrative spending only: not R&amp;D, and not selling or marketing, which each drug's pre-launch and yearly selling costs cover. Reported SG&amp;A is optional and only used to check that overhead and selling costs add up to roughly what the company actually spends. Tax applies only after past losses are used up: the carryforward is the company's existing tax-loss pool from its 10-K, and losses inside the simulation are added to it. Debt is not an input: enter its yearly cost under interest expense. Repaying it is not part of the simulation (see the note in Results). Enter 0 where something does not apply.</p>
@@ -1058,7 +1059,7 @@
       <span class="module-num">STEP 3</span>
       <div style="flex:1;">
         <div class="module-title">Drugs in the pipeline</div>
-        <p class="module-desc">One row per drug. Untick <b>On</b> to leave a drug out. Click <b>ƒx</b> on a row for timing, costs, margin and the calculation. In Results you set which drugs are assumed approved.</p>
+        <p class="module-desc">One row per drug. Untick <b>On</b> to leave a drug out entirely, including what it costs today (to assume it fails, use the drug picker in Results instead). Click <b>ƒx</b> on a row for timing, costs, margin and the calculation. In Results you set which drugs are assumed approved.</p>
         <div class="flag-legend">
           <span class="flag-legend-item"><span class="swatch red"></span>Missing. Enter a value to run the simulation.</span>
           <span class="flag-legend-item"><span class="swatch blue"></span>The AI's own estimate, not a company figure. Check it or change it.</span>
@@ -1190,6 +1191,7 @@
     <tr><td>Tax-loss carryforward</td><td>$M</td><td>Starting size of the loss pool that offsets future profit (section 8).</td></tr>
     <tr><td>Interest expense</td><td>$M per year</td><td>Subtracted every year (section 8); cash runway.</td></tr>
     <tr><td>Reported SG&amp;A (optional)</td><td>$M, last 12 months</td><td>Never used in the calculation. Only compared with overhead and selling costs for the cost check (section 10).</td></tr>
+    <tr><td>Reported R&amp;D (optional)</td><td>$M, last 12 months</td><td>Never used in the calculation. Only compared with the total yearly burn of the drugs switched on, for the cost check (section 10).</td></tr>
   </table>
   <h3>Model settings</h3>
   <table class="method-table">
@@ -1202,7 +1204,7 @@
   <h3>Per drug</h3>
   <table class="method-table">
     <tr><th>Input</th><th>Unit</th><th>Used in</th></tr>
-    <tr><td>On</td><td>switch</td><td>Unticked drugs are left out of every calculation.</td></tr>
+    <tr><td>On</td><td>switch</td><td>Unticked drugs are left out of every calculation, including their costs today. This differs from marking a drug as failing, which keeps its costs until its next readout.</td></tr>
     <tr><td>Approved / fails</td><td>switch</td><td>Chooses which timeline the drug follows (sections 3 to 6). Drugs already on the market are always counted.</td></tr>
     <tr><td>Phase</td><td>list</td><td>Only "Approved / Marketed" changes the maths: such a drug cannot be switched to fail. Other phases are labels. Preclinical programs from an AI answer are added switched off, so they count only if you tick On.</td></tr>
     <tr><td>Patients</td><td>people</td><td>Peak sales.</td></tr>
@@ -1290,7 +1292,7 @@
     <tr><td>Lifetime revenue (pipeline table)</td><td>The company's total revenue from the drug if approved, over its whole life (until its sales fade to zero), including the milestone, before any costs. Not limited to the period shown.</td></tr>
     <tr><td>Drug by Drug table</td><td>For each drug if approved: launch year, peak yearly company revenue, total company revenue and total product profit over the period shown; its remaining R&amp;D; and what it would spend if it fails (section 6).</td></tr>
     <tr><td>Compare tab</td><td>The same results, calculated the same way, for each open tab from its own inputs.</td></tr>
-    <tr><td>Cost checks</td><td>Warnings in the summary that never change a number: a drug the company sells itself with no yearly selling cost; and, when reported SG&amp;A is entered, overhead plus the yearly selling costs of drugs already on sale coming out more than 25% above it (costs possibly counted twice; pre-launch spending is left out of this test because it is new launch preparation), or overhead, those selling costs and the coming year's pre-launch selling together coming out more than 25% below it (costs possibly missing).</td></tr>
+    <tr><td>Cost checks</td><td>Warnings in the summary that never change a number: a drug the company sells itself with no yearly selling cost; and, when reported SG&amp;A is entered, overhead plus the yearly selling costs of drugs already on sale coming out more than 25% above it (costs possibly counted twice; pre-launch spending is left out of this test because it is new launch preparation), or overhead, those selling costs and the coming year's pre-launch selling together coming out more than 25% below it (costs possibly missing); when reported R&amp;D is entered, the annual burn of all drugs switched on adding up to less than 70% of it (drug costs possibly too low, or research not tied to a listed drug, which the simulation does not count) or more than 140% of it (possibly too high or counted twice); and a note naming any program that is switched off, since a switched-off program is left out entirely, including its current costs, while a program marked as failing keeps its costs until its next readout.</td></tr>
   </table>
   <p>Figures on screen are rounded for display ($1.2B, $850M); the calculations use the unrounded values.</p>
 
@@ -1370,7 +1372,7 @@
   </ul>
 
   <h2>8. Privacy</h2>
-  <p>The simulator runs entirely in your browser. It does not collect or send anything you enter or paste, and it sets no cookies. So that your open tabs survive a refresh, your inputs, pasted text and your choice of phone or desktop view are saved in this browser's own local storage on your device. They are never sent to us or to anyone else, and other people can only see them if they use the same browser profile, so avoid saving sensitive information on a shared computer. You can <a href="#" data-clear-saved>Erase saved data</a> at any time; clearing your browser's site data also removes it. The website hosting this page may keep standard access logs under its own policies.</p>
+  <p>The calculations run entirely in your browser. The simulator does not collect or send anything you enter or paste, and it sets no cookies. So that your open tabs survive a refresh, your inputs, pasted text and your choice of phone or desktop view are saved in this browser's own local storage on your device. They are never sent to us or to anyone else, and other people can only see them if they use the same browser profile, so avoid saving sensitive information on a shared computer. You can <a href="#" data-clear-saved>Erase saved data</a> at any time; clearing your browser's site data also removes it. The website hosting this page may keep standard access logs under its own policies. To see how many people use the simulator, we count anonymous visits with Cloudflare Web Analytics, which sets no cookies and does not track you across sites. It receives basic visit information, such as the page address, the site you came from, your browser and device type and your approximate country, but never anything you enter or paste. Cloudflare handles this information under its own privacy policy, and an ad blocker may stop the count.</p>
 
   <h2>9. No warranty</h2>
   <p>Project Nublar is provided "as is" and "as available", without warranties of any kind, express or implied, including warranties of accuracy, completeness, reliability, availability, merchantability, fitness for a particular purpose and non-infringement. The authors may change, suspend or withdraw the simulator at any time without notice.</p>
@@ -1616,7 +1618,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   var el = {};
   ['totalCash', 'monthsToCatalyst', 'baseOverhead',
    'taxRate', 'nolCarry', 'interestExpense', 'windDown',
-   'prelaunchYears', 'selfSellShare', 'horizonMax', 'reportedSGA'].forEach(function (id) {
+   'prelaunchYears', 'selfSellShare', 'horizonMax', 'reportedSGA', 'reportedRnD'].forEach(function (id) {
     el[id] = document.getElementById(id);
   });
 
@@ -2161,6 +2163,24 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
       else if (implied < sga * 0.75) out.push('Worth checking: your inputs imply about ' + fmtBig(implied) + ' of overhead and selling costs over the next 12 months' + detail +
         ', well below the company\u2019s reported SG&amp;A of ' + fmtBig(sga) + '. Some overhead or selling costs may be missing.');
     }
+    // R&D: the yearly burn of the drugs switched on, against the company's reported
+    // R&D. Per-drug costs are often estimates, so only a wide gap is flagged.
+    var rd = parseFloat(el.reportedRnD.value);
+    var off = assets.filter(function (a) { return !a.included; });
+    var offNames = off.slice(0, 3).map(function (a) { return escapeHtml(a.name || 'unnamed program'); }).join(', ') + (off.length > 3 ? ' and ' + (off.length - 3) + ' more' : '');
+    if (isFinite(rd) && rd > 0) {
+      var burnSum = 0;
+      sim.items.forEach(function (it) { burnSum += Math.max(0, it.p.annualBurn || 0); });
+      if (burnSum < rd * 0.7) out.push('Worth checking: the yearly burn of the drugs switched on adds up to about ' + fmtBig(burnSum) +
+        ', well below the company\u2019s reported R&amp;D of ' + fmtBig(rd) + ' over the last 12 months. Some drugs\u2019 annual burn may be too low' +
+        (off.length ? ', or the company may still be paying for programs that are switched off (' + offNames + ')' : '') +
+        '. Research not tied to a listed drug is not counted, so cash may run out sooner than shown.');
+      else if (burnSum > rd * 1.4) out.push('Worth checking: the yearly burn of the drugs switched on adds up to about ' + fmtBig(burnSum) +
+        ', well above the company\u2019s reported R&amp;D of ' + fmtBig(rd) + ' over the last 12 months. Some drugs\u2019 annual burn may be too high, or costs may be counted twice.');
+    }
+    // Switched-off programs are left out completely, which is not the same as failing.
+    if (off.length) out.push((off.length === 1 ? 'Switched off: ' + offNames + ' is' : off.length + ' programs are switched off (' + offNames + ') and are') +
+      ' left out entirely, including what ' + (off.length === 1 ? 'it costs' : 'they cost') + ' today. To assume a program fails instead, switch it on and mark it as failing in the drug picker, which keeps its costs up to its next readout.');
     return out;
   }
 
@@ -2649,6 +2669,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
       "8. Corporate overhead per year ($M): general and administrative (G&A) expense only, from the latest filings (annualize the latest quarter if needed). " +
       "Exclude R&D, and exclude selling, marketing and commercial costs: items 26 and 27 cover those for each drug, so they are not counted twice\n" +
       "S. Reported SG&A ($M, last 12 months): total selling, general and administrative expense from the latest filings, label this line exactly \"S.\". " +
+      "R. Reported R&D ($M, last 12 months): total research and development expense from the latest filings, label this line exactly \"R.\". " +
       "It is used only to cross-check items 8, 26 and 27, never in the calculation\n\n" +
       "=== MODEL SETTINGS (label these exactly M1 to M4, not with numbers) ===\n" +
       "These are modeling assumptions, not disclosed facts. Give your suggested value for this company, label it \"(suggestion)\" and say in a few words why.\n" +
@@ -3111,6 +3132,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
       // "S. Reported SG&A" (lettered): used only for the cost cross-check.
       var sl = line.match(/^S\\?[\.\):]\s*\**\s*reported\s+(sg&a|selling)[^:]*:\s*(.+)$/i);
       if (sl) { var sv = extractNumber(valueAfterLabel(sl[0].replace(/\*/g, '')) || sl[2]); if (sv !== null && isFinite(sv)) company.reportedSGA = sv; return; }
+      // "R. Reported R&D" (lettered): used only for the R&D cross-check.
+      var rl = line.match(/^R\\?[\.\):]\s*\**\s*reported\s+(r&(amp;)?d|research)[^:]*:\s*(.+)$/i);
+      if (rl) { var rv = extractNumber(valueAfterLabel(rl[0].replace(/\*/g, '')) || rl[3]); if (rv !== null && isFinite(rv)) company.reportedRnD = rv; return; }
       // "D. Develops or sells drugs: Yes/No" (lettered, so numbering never shifts).
       var dl = line.match(/^D\\?[\.\):]\s*\**\s*develops or sells drugs\**\s*:?\s*\**\s*(.+)$/i);
       if (dl) { drugAnswer = /^\W*no\b/i.test(dl[1]) ? 'no' : (/^\W*yes\b/i.test(dl[1]) ? 'yes' : drugAnswer); return; }
@@ -3251,6 +3275,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     if (c.selfSellShare !== undefined && c.selfSellShare !== null) setIf(el.selfSellShare, Math.min(100, Math.max(0, c.selfSellShare)));
     if (c.horizonMax !== undefined && c.horizonMax !== null) setIf(el.horizonMax, Math.min(40, Math.max(3, Math.round(c.horizonMax))));
     if (c.reportedSGA !== null && c.reportedSGA !== undefined && isFinite(c.reportedSGA)) { el.reportedSGA.value = c.reportedSGA; coAi.reportedSGA = true; filledCount++; }
+    if (c.reportedRnD !== null && c.reportedRnD !== undefined && isFinite(c.reportedRnD)) { el.reportedRnD.value = c.reportedRnD; coAi.reportedRnD = true; filledCount++; }
     if (c.windDown === 'yes' || c.windDown === 'no') { el.windDown.value = c.windDown; coAi.windDown = true; filledCount++; }
 
     var assetCount = 0;
@@ -4061,6 +4086,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     taxRate: 'Tax on profit once past losses are used up. Use the company’s disclosed expected rate if there is one; otherwise about 21% US federal plus state tax (often 24 to 26% in total). Here past losses offset profit in full; US rules cap that at 80% of profit for losses since 2018, so tax in the first profitable years may be a little higher in reality.',
     nolCarry: 'The company’s existing pool of past tax losses (net operating loss carryforwards), found in the income tax note of the 10-K or 20-F. Profit is offset by this pool before any tax is charged. Losses made inside the simulation are added to it.',
     reportedSGA: 'Selling, general and administrative expense over the last 12 months, from the income statement. Optional and never used in the calculation: it only checks that overhead plus selling costs add up to roughly what the company actually spends.',
+    reportedRnD: 'Research and development expense over the last 12 months, from the income statement. Optional and never used in the calculation: it only checks that the yearly burn of the drugs switched on adds up to roughly what the company actually spends on R&D.',
     interestExpense: 'What the company pays each year on borrowed money (loans, convertible notes, bonds), from the income statement. Subtracted every year and counted in the cash runway. Repaying the debt itself is not included. Enter 0 if there is no debt.',
     // Model settings
     prelaunchYears: 'How many years before each launch the drug’s pre-launch selling spend is spread out, evenly. Typically 1 to 2 years.',
@@ -4068,7 +4094,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     horizonMax: 'The longest period the results cover, in years from today.',
     windDown: 'Yes: overhead stops once the company has nothing left to develop or sell. No: overhead is charged every year, for example because the company keeps operating through partners.',
     // Pipeline table
-    th_on: 'Untick to leave this drug out of every calculation.',
+    th_on: 'Untick to leave this drug out entirely, including what it costs today. To assume it fails instead, keep it ticked and mark it as failing in the drug picker under Results: its costs then run until its next readout.',
     th_asset: 'The drug or program name. Click ƒx to see and edit its timing, costs and the calculation.',
     th_phase: 'Development stage. Only “Approved / Marketed” changes the maths: such a drug is always counted and cannot be switched to fail.',
     th_patients: 'Diagnosed patients who fit the use the drug is expected to be approved for (severity, line of treatment, required biomarker), in one country, usually the US. Not everyone with the disease. For a one-time treatment (such as a gene therapy), newly eligible patients per year. Peak sales = patients × peak penetration × price per patient.',
@@ -4207,5 +4233,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 })();
 
 </script>
+<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "8a9148075d0a46949a9fcb944839a8bf"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>
