@@ -748,7 +748,7 @@
 
   html.phone body{ font-size:15px; }
   html.phone .wrap, html.phone .topbar-inner, html.phone .tabstrip-wrap, html.phone footer, html.phone .legal-page{ max-width:440px !important; }
-  html.phone .sim-banner{ max-width:404px !important; font-size:12.5px; padding:10px 12px; margin-top:14px !important; }
+  html.phone .sim-banner{ max-width:412px !important; width:calc(100% - 28px) !important; box-sizing:border-box; font-size:12.5px; padding:10px 12px; margin-top:14px !important; }
   html.phone .wrap{ padding:14px 14px 90px; }
   html.phone .topbar-inner{ padding:0 14px 8px; gap:8px; }
   /* Phone header: brand on the left, view switch on the right. Methodology and the disclaimer stay linked from the footer. */
@@ -1237,6 +1237,17 @@
   .simple-start.need-name .ss-input{ border-color:var(--blue) !important; }
   .ss-hint.ss-warn{ color:var(--orange); }
   .ss-input{ text-align:left !important; text-transform:none !important; letter-spacing:0 !important; padding:0 14px !important; }
+  .ss-manual{ margin:6px 0 0; text-align:center; }
+  .ss-manual .sh-link{ font-size:14px; color:var(--text); }
+  .sh-stats{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  .sh-stats .sh-k{ min-height:2.7em; }
+  .sh-stats .sh-k span{ display:block; }
+  .sh-stats{ max-width:640px; }
+  .sh-v.warn{ color:var(--orange); }
+  .sh-sub{ margin-top:2px; font-family:var(--serif); font-size:12.5px; color:var(--text-faint); }
+  html.phone .sh-stats{ gap:12px; }
+  html.phone .sh-v2{ font-size:30px !important; }
+  html.phone .sh-stats .sh-v{ font-size:30px; }
   html.phone .simple-start{ margin-top:28px; }
   html.phone .sh-v{ font-size:38px; }
   .mode-toggle{ font-weight:600; }
@@ -1293,6 +1304,7 @@
     <button type="button" class="btn primary ss-btn" id="ssGo">See results</button>
     <p class="ss-status" id="ssGoStatus" role="status"></p>
     </div>
+    <p class="ss-manual"><button type="button" class="sh-link" id="ssManual">Enter figures manually</button></p>
     <p class="ss-fine">A simulator, not a forecast. Not investment advice.</p>
   </div>
 
@@ -1434,8 +1446,17 @@
     </div>
     <div class="simple-hero simple-only" id="simpleHero">
       <div class="sh-top"><span class="sh-name" id="shName"></span><button type="button" class="sh-new" id="simpleNewCompany"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M6.5 1.5v10M1.5 6.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>New company</button></div>
-      <div class="sh-k">Total net income <span id="shPeriod"></span></div>
-      <div class="sh-v" id="shValue"></div>
+      <div class="sh-stats">
+        <div class="sh-stat">
+          <div class="sh-k">Total net income <span id="shPeriod"></span></div>
+          <div class="sh-v" id="shValue"></div>
+        </div>
+        <div class="sh-stat">
+          <div class="sh-k">Outside funding needed</div>
+          <div class="sh-v sh-v2" id="shFund"></div>
+          <div class="sh-sub" id="shFundSub"></div>
+        </div>
+      </div>
     </div>
 
 
@@ -1514,6 +1535,7 @@
     <p style="margin:0 0 10px; color:var(--text);"><b>By using Project Nublar you agree to the <a href="#legal" data-open-legal>Disclaimer and terms of use</a>.</b></p>
     <p style="margin:0;"><a href="#legal" data-open-legal>Read the full disclaimer and terms of use</a> and the <a href="#methodology" data-open-method>methodology</a>, including the model's known limitations, privacy and open-source licences (Chart.js and @kurkle/color, MIT License).</p>
     <p style="margin:10px 0 0;" id="saveNote">Your tabs are saved only in this browser, on this device, and are never sent anywhere. <a href="#" data-clear-saved>Erase saved data</a> · <a href="#" data-count-toggle>Don't count my visits</a></p>
+    <p class="credit" style="margin:14px 0 0;">Created by Andy Park</p>
   </footer>
 </div>
 
@@ -4759,10 +4781,16 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     if (nm) { var t = tabs[activeTab]; nm.textContent = (t && t.companyName) || document.getElementById('promptTicker').value.trim() || 'Your company'; }
     var nc = document.getElementById('simpleNewCompany');
     if (nc) { var full = tabs.length >= MAX_TABS; nc.disabled = full; nc.title = full ? 'Up to ' + MAX_TABS + ' tabs. Close one to add another company.' : 'Open a new tab for another company'; }
-    if (!sc || !model || !model.sim) { v.textContent = ''; return; }
+    if (!sc || !model || !model.sim) { v.textContent = ''; var f0 = document.getElementById('shFund'); if (f0) { f0.textContent = ''; document.getElementById('shFundSub').textContent = ''; } return; }
     var L = model.sim.labels;
     v.textContent = fmtBig(sc.totalNet);
     v.classList.toggle('neg', sc.totalNet < 0);
+    var fv = document.getElementById('shFund'), fs = document.getElementById('shFundSub');
+    if (fv) {
+      fv.textContent = sc.fundingNeed > 0 ? fmtBig(sc.fundingNeed) : 'None';
+      fv.classList.toggle('warn', sc.fundingNeed > 0);
+      fs.textContent = sc.cashOutIdx !== null ? 'Cash runs out in ' + L[sc.cashOutIdx] : 'Cash never runs out';
+    }
     document.getElementById('shPeriod').textContent = L[0] + '–' + L[L.length - 1];
   }
   function simpleAfterRecalc(model) {
@@ -4846,6 +4874,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     setTimeout(function () { if (window.Chart) Object.keys(Chart.instances).forEach(function (k) { Chart.instances[k].resize(); }); if (typeof updateJumpPill === 'function') updateJumpPill(); }, 60);
   }
   document.getElementById('modeToggle').addEventListener('click', function () { setMode(!isSimple(), true); window.scrollTo(0, 0); });
+  // Simple start: the manual route, for anyone without an AI or who prefers typing every figure.
+  document.getElementById('ssManual').addEventListener('click', function () { setMode(false, true); window.scrollTo(0, 0); });
   document.addEventListener('click', function (e) {
     var g = e.target.closest('[data-goto]');
     if (g && isSimple()) { e.preventDefault(); setSimpleStep(g.getAttribute('data-goto')); return; }
