@@ -1240,12 +1240,13 @@
   .ss-manual{ margin:6px 0 0; text-align:center; }
   .ss-manual .sh-link{ font-size:14px; color:var(--text); }
   .sh-stats{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
-  .sh-stats .sh-k{ min-height:2.7em; }
-  .sh-stats .sh-k span{ display:block; }
+  .sh-stats{ grid-template-rows:auto auto auto; grid-auto-flow:column; row-gap:2px; }
+  .sh-stat{ display:contents; }
+  .sh-stats .sh-k{ margin-top:22px; align-self:end; }
   .sh-stats{ max-width:640px; }
   .sh-v.warn{ color:var(--orange); }
   .sh-sub{ margin-top:2px; font-family:var(--serif); font-size:12.5px; color:var(--text-faint); }
-  html.phone .sh-stats{ gap:12px; }
+  html.phone .sh-stats{ column-gap:12px; }
   html.phone .sh-v2{ font-size:30px !important; }
   html.phone .sh-stats .sh-v{ font-size:30px; }
   html.phone .simple-start{ margin-top:28px; }
@@ -1448,8 +1449,9 @@
       <div class="sh-top"><span class="sh-name" id="shName"></span><button type="button" class="sh-new" id="simpleNewCompany"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M6.5 1.5v10M1.5 6.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>New company</button></div>
       <div class="sh-stats">
         <div class="sh-stat">
-          <div class="sh-k">Total net income <span id="shPeriod"></span></div>
+          <div class="sh-k">Total net income</div>
           <div class="sh-v" id="shValue"></div>
+          <div class="sh-sub" id="shPeriod"></div>
         </div>
         <div class="sh-stat">
           <div class="sh-k">Outside funding needed</div>
