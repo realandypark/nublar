@@ -1132,7 +1132,7 @@
   html.simple #module1{ max-width:720px; margin:40px auto 0; border:0; background:none; padding:0; }
   html.simple #module1 > .panel{ display:flex; flex-direction:column; border:0; background:none; padding:0; margin-top:0 !important; }
   html.simple #revBlock{ order:1; } html.simple #cashBlock{ order:1; }
-  html.simple #shSeg{ order:2; display:flex; } html.simple #scChips{ order:3; } html.simple #shFine{ order:4; display:block; } html.simple #simpleFigures{ order:5; }
+  html.simple #shSeg{ order:2; display:flex; } html.simple #scChips{ order:3; } html.simple #shFine{ order:4; display:block; } html.simple #shCheckRow{ order:5; display:flex; justify-content:center; margin-top:14px; } html.simple #simpleFigures{ order:6; }
   html.simple #scPresets{ display:none !important; }
   html.simple[data-schart="cash"] #revBlock, html.simple:not([data-schart="cash"]) #cashBlock{ display:none; }
   html.simple #module1 .chart-block{ margin-top:8px; }
@@ -1462,7 +1462,8 @@
       <div class="sh-seg simple-only" id="shSeg" role="group" aria-label="Chart">
         <button type="button" data-schart="rev" aria-pressed="true">Revenue</button><button type="button" data-schart="cash" aria-pressed="false">Cash</button>
       </div>
-      <p class="sh-fine simple-only" id="shFine">Hypothetical, not a forecast. Debt not included. AI figures can be wrong. <button type="button" class="sh-link" id="shCheck" aria-expanded="false">Check figures</button></p>
+      <p class="sh-fine simple-only" id="shFine">Hypothetical, not a forecast. Debt not included. AI figures can be wrong.</p>
+      <div class="sh-checkrow simple-only" id="shCheckRow"><button type="button" class="sh-new sh-check" id="shCheck" aria-expanded="false" aria-controls="simpleFigures"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M9.6 1.9l2.5 2.5L5 11.5 1.8 12.2l.7-3.2 7.1-7.1Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg><span id="shCheckLabel">Check or change figures</span></button></div>
       <div class="simple-figures simple-only" id="simpleFigures" hidden>
         <p class="sf-legend"><span class="sr-est">AI estimate</span> means the AI guessed. Changes update the charts.</p>
         <div id="simpleFiguresBody"></div>
@@ -4773,7 +4774,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   function simpleOnTab() {
     if (!isSimple()) return;
     var f = document.getElementById('simpleFigures'), c = document.getElementById('shCheck');
-    if (f) { f.hidden = true; } if (c) { c.setAttribute('aria-expanded', 'false'); c.textContent = 'Check figures'; }
+    if (f) { f.hidden = true; } if (c) { c.setAttribute('aria-expanded', 'false'); document.getElementById('shCheckLabel').textContent = 'Check or change figures'; }
     setSimpleStep(simpleReady(lastModel) ? 'results' : (assets.length ? 'review' : 'get'), false);
   }
   // Start card: its boxes drive the real prompt, paste box and "Fill in the form" button.
@@ -4821,7 +4822,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   });
   document.getElementById('shCheck').addEventListener('click', function () {
     var f = document.getElementById('simpleFigures'), open = f.hidden;
-    f.hidden = !open; this.setAttribute('aria-expanded', String(open)); this.textContent = open ? 'Hide figures' : 'Check figures';
+    f.hidden = !open; this.setAttribute('aria-expanded', String(open)); document.getElementById('shCheckLabel').textContent = open ? 'Hide figures' : 'Check or change figures';
     if (open) { renderSimpleReview(lastModel); f.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
   });
   function renderModeToggle() {
