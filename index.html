@@ -1059,6 +1059,8 @@
   .sr-dot{ width:9px; height:9px; border-radius:2px; flex-shrink:0; }
   .sr-warn{ margin-top:14px; padding:10px 14px; border:1px solid rgba(251,139,30,0.45); background:rgba(251,139,30,0.06); border-radius:4px; font-family:var(--serif); font-size:13px; line-height:1.55; color:var(--text-dim); }
   .sr-warn ul{ margin:4px 0 0; padding-left:18px; }
+  .sr-warn .sw-fix{ margin:8px 0 0; }
+  .sr-warn .sw-fix .sh-link{ font-size:13px; color:var(--text); }
   .sr-block{ margin-top:14px; padding:10px 14px; border:1px dashed var(--red); border-radius:4px; font-family:var(--serif); font-size:13px; line-height:1.55; color:var(--text-dim); }
   .sr-actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; align-items:center; }
   .sr-adv{ margin-left:auto; }
@@ -1132,7 +1134,7 @@
   html.simple #module1{ max-width:720px; margin:40px auto 0; border:0; background:none; padding:0; }
   html.simple #module1 > .panel{ display:flex; flex-direction:column; border:0; background:none; padding:0; margin-top:0 !important; }
   html.simple #revBlock{ order:1; } html.simple #cashBlock{ order:1; }
-  html.simple #shSeg{ order:2; display:flex; } html.simple #scChips{ order:3; } html.simple #shFine{ order:4; display:block; } html.simple #shCheckRow{ order:5; display:flex; justify-content:center; margin-top:14px; } html.simple #simpleFigures{ order:6; }
+  html.simple #shSeg{ order:2; display:flex; } html.simple #scChips{ order:3; } html.simple #shWarn:not([hidden]){ order:4; display:block; margin-top:18px; } html.simple #shFine{ order:5; display:block; } html.simple #shCheckRow{ order:6; display:flex; justify-content:center; margin-top:14px; } html.simple #simpleFigures{ order:7; }
   html.simple #scPresets{ display:none !important; }
   html.simple[data-schart="cash"] #revBlock, html.simple:not([data-schart="cash"]) #cashBlock{ display:none; }
   html.simple #module1 .chart-block{ margin-top:8px; }
@@ -1485,6 +1487,7 @@
       <div class="sh-seg simple-only" id="shSeg" role="group" aria-label="Chart">
         <button type="button" data-schart="rev" aria-pressed="true">Revenue</button><button type="button" data-schart="cash" aria-pressed="false">Cash</button>
       </div>
+      <div class="sr-warn simple-only" id="shWarn" hidden></div>
       <p class="sh-fine simple-only" id="shFine">Hypothetical, not a forecast. Not investment advice. Debt not included. AI figures can be wrong.</p>
       <div class="sh-checkrow simple-only" id="shCheckRow"><button type="button" class="sh-new sh-check" id="shCheck" aria-expanded="false" aria-controls="simpleFigures"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M9.6 1.9l2.5 2.5L5 11.5 1.8 12.2l.7-3.2 7.1-7.1Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg><span id="shCheckLabel">Check or change figures</span></button></div>
       <div class="simple-figures simple-only" id="simpleFigures" hidden>
@@ -4739,8 +4742,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
       h += '</div></div>';
     });
     h += '</section>';
-    var notes = (model && model.sim) ? costChecks(model.sim) : [];
-    if (notes.length) h += '<div class="sr-warn"><b>Worth a look</b><ul>' + notes.map(function (n) { return '<li>' + n.replace(/^Worth checking:\s*/, '') + '</li>'; }).join('') + '</ul></div>';
+    renderSimpleWarn(model);
     ['simpleReviewBody', 'simpleFiguresBody'].forEach(function (id) {
       var box = document.getElementById(id); if (!box) return;
       if (box.contains(document.activeElement)) return; // never redraw under a box being typed in
@@ -4776,6 +4778,18 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     t.blur();
     recalcAll();
     renderSimpleReview(lastModel);
+  });
+  // Cost checks, shown on the results screen itself so nobody has to open the figures to see them.
+  function renderSimpleWarn(model) {
+    var w = document.getElementById('shWarn'); if (!w) return;
+    var notes = (model && model.sim && model.sim.items && model.sim.items.length) ? costChecks(model.sim) : [];
+    if (!notes.length) { w.hidden = true; w.innerHTML = ''; return; }
+    w.innerHTML = '<b>Worth a look</b><ul>' + notes.map(function (n) { var s = n.replace(/^Worth checking:\s*/, ''); return '<li>' + s.charAt(0).toUpperCase() + s.slice(1) + '</li>'; }).join('') + '</ul>' +
+      '<p class="sw-fix"><button type="button" class="sh-link" data-s-advanced>Fix this in Advanced mode</button></p>';
+    w.hidden = false;
+  }
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('[data-s-advanced]')) { setMode(false, true); window.scrollTo(0, 0); }
   });
   function renderSimpleHero(model, sc) {
     var v = document.getElementById('shValue'); if (!v) return;
