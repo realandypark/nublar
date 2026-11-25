@@ -1227,6 +1227,16 @@
   .sh-new:disabled{ opacity:.45; cursor:default; }
   .sh-top{ align-items:center !important; }
   @media (max-width:389px){ html.phone .brand{ white-space:nowrap; flex-shrink:0; } html.phone .topbar-nav{ gap:6px; } html.phone .topbar-nav > *{ padding-left:8px; padding-right:8px; } html.phone #viewToggle span{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; } }
+  .ss-g{ display:flex; flex-direction:column; gap:8px; transition:opacity .2s ease; }
+  .ss-g + .ss-g{ margin-top:14px; }
+  .ss-lab{ display:flex; align-items:center; gap:9px; margin:0; font-family:var(--serif); font-size:14.5px; font-weight:600; color:var(--text); }
+  .ss-num{ flex-shrink:0; width:22px; height:22px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; background:var(--blue); color:#fff; }
+  .simple-start.need-name .ss-g2, .simple-start.need-name .ss-g3{ opacity:.45; }
+  .simple-start.need-name .ss-g2:focus-within, .simple-start.need-name .ss-g3:focus-within{ opacity:1; }
+  .simple-start.need-name .ss-g2 .ss-num, .simple-start.need-name .ss-g3 .ss-num{ background:var(--panel-raised); color:var(--text-dim); border:1px solid var(--border-strong); }
+  .simple-start.need-name .ss-input{ border-color:var(--blue) !important; }
+  .ss-hint.ss-warn{ color:var(--orange); }
+  .ss-input{ text-align:left !important; text-transform:none !important; letter-spacing:0 !important; padding:0 14px !important; }
   html.phone .simple-start{ margin-top:28px; }
   html.phone .sh-v{ font-size:38px; }
   .mode-toggle{ font-weight:600; }
@@ -1268,12 +1278,21 @@
       <span class="ss-arr" aria-hidden="true"><svg width="20" height="10" viewBox="0 0 20 10" fill="none"><path d="M1 5h17M14 1l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       <div class="ss-item" role="listitem"><span class="ss-ic ss-ic-accent"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 20h16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><rect x="6" y="12" width="3" height="8" rx="1" fill="currentColor"/><rect x="10.5" y="8" width="3" height="12" rx="1" fill="currentColor"/><rect x="15" y="4.5" width="3" height="15.5" rx="1" fill="currentColor"/></svg></span><span class="ss-cap">See charts</span></div>
     </div>
-    <input type="text" id="ssTicker" class="ss-input" placeholder="Stock symbol" aria-label="Stock symbol" autocomplete="off" spellcheck="false">
-    <button type="button" class="btn ss-btn ss-copy" id="ssCopy"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true"><rect x="4.5" y="4.5" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M10.5 2.5h-6a2 2 0 0 0-2 2v6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg><span id="ssCopyLabel">Copy prompt for your AI</span></button>
+    <div class="ss-g ss-g1">
+      <label class="ss-lab" for="ssTicker"><span class="ss-num">1</span>Type the company name</label>
+      <input type="text" id="ssTicker" class="ss-input" placeholder="e.g. Example Bio" autocomplete="off" spellcheck="false">
+    </div>
+    <div class="ss-g ss-g2">
+    <p class="ss-lab" id="ssLab2"><span class="ss-num">2</span>Copy the prompt into your AI</p>
+    <button type="button" class="btn ss-btn ss-copy" id="ssCopy" aria-describedby="ssLab2"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true"><rect x="4.5" y="4.5" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M10.5 2.5h-6a2 2 0 0 0-2 2v6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg><span id="ssCopyLabel">Copy prompt for your AI</span></button>
     <p class="ss-hint" id="ssCopyStatus" role="status">Use an AI that can search the web.</p>
-    <textarea id="ssPaste" class="ss-paste" placeholder="Paste the AI's answer" aria-label="The AI's answer"></textarea>
+    </div>
+    <div class="ss-g ss-g3">
+    <label class="ss-lab" for="ssPaste"><span class="ss-num">3</span>Paste its answer</label>
+    <textarea id="ssPaste" class="ss-paste" placeholder="Paste the AI's answer here"></textarea>
     <button type="button" class="btn primary ss-btn" id="ssGo">See results</button>
     <p class="ss-status" id="ssGoStatus" role="status"></p>
+    </div>
     <p class="ss-fine">A simulator, not a forecast. Not investment advice.</p>
   </div>
 
@@ -1297,11 +1316,11 @@
       <svg class="chev" viewBox="0 0 16 16" width="12" height="12" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
     <div class="accordion-body" id="promptBody"><div>
-      <p class="simple-only ss-sub prose" id="ssSub1"><span class="ss-n">1</span>Stock symbol</p>
+      <p class="simple-only ss-sub prose" id="ssSub1"><span class="ss-n">1</span>Company name</p>
       <p class="module-desc adv-only" style="margin:10px 2px 10px;">Copy the prompt into any AI assistant with web search, then paste its answer back to pre-fill the form. AI answers can be inaccurate or out of date, so treat them as suggestions to verify and change.</p>
       <div class="panel prompt-panel">
         <div class="input-grid" style="grid-template-columns:1fr;">
-          <div class="field"><label for="promptTicker">Ticker</label><div class="field-row"><input type="text" id="promptTicker" placeholder="e.g. ANDY" style="text-align:left;"></div></div>
+          <div class="field"><label for="promptTicker">Company name</label><div class="field-row"><input type="text" id="promptTicker" placeholder="e.g. Example Bio" style="text-align:left;"></div></div>
         </div>
         <div class="panel-body" style="padding-top:0;">
           <textarea id="promptText" data-ph-fold="Show the prompt" aria-label="Prompt to copy into an AI assistant" readonly class="prose" style="width:100%; min-height:280px; background:var(--panel-alt); border:1px solid var(--border); border-radius:4px; color:var(--text-dim); font-size:12px; line-height:1.6; padding:12px; resize:vertical;"></textarea>
@@ -1506,7 +1525,7 @@
   <h2>1. Basic principles</h2>
   <ul>
     <li><b>Scope.</b> The simulator models companies that develop or sell drugs. If a pasted AI answer says the company does not (for example a research-tools, diagnostics or device company), nothing is filled in and no results are shown.</li>
-    <li><b>Lite mode and Advanced mode.</b> Lite mode is a simpler view of the same simulator: it uses the same research prompt, the same reading of the AI's answer and the same calculations, and only shows fewer figures at a time. Advanced mode shows and lets you edit every input. Both are free, and switching between them never changes a result.</li>
+    <li><b>Simple mode and Advanced mode.</b> Simple mode is a simpler view of the same simulator: it uses the same research prompt, the same reading of the AI's answer and the same calculations, and only shows fewer figures at a time. Advanced mode shows and lets you edit every input. Both are free, and switching between them never changes a result.</li>
     <li><b>Deterministic.</b> You decide which drugs are assumed approved and which fail. The simulator never assigns a probability of success and never averages outcomes.</li>
     <li><b>Yearly periods from today.</b> Year 1 is the next 12 months from the day you open the page, year 2 the 12 months after that, and so on. Each period is labeled with the calendar year its midpoint falls in. These are not the company's fiscal years.</li>
     <li><b>All money in millions of US dollars ($M)</b>, except price per patient, which is in dollars per patient per year.</li>
@@ -1680,7 +1699,7 @@
     <li>You are responsible for every figure you enter or accept. Figures are not checked or verified by Project Nublar.</li>
     <li>The optional research prompt is a convenience. AI answers can be wrong, incomplete, out of date or invented. The authors do not endorse or partner with any AI service. Check every suggested figure against primary sources such as company filings.</li>
     <li>Automatic form filling reads AI answers by pattern matching and can put a figure in the wrong field. Review every value after pasting.</li>
-    <li>Lite mode shows only the main figures. Results still use every figure from the AI's answer, including those not shown there. You can see and change all of them in Advanced mode, and you remain responsible for checking them. "Advanced" refers only to the number of settings shown; it does not make the simulator suitable for professional or investment use.</li>
+    <li>Simple mode shows only the main figures. Results still use every figure from the AI's answer, including those not shown there. You can see and change all of them in Advanced mode, and you remain responsible for checking them. "Advanced" refers only to the number of settings shown; it does not make the simulator suitable for professional or investment use.</li>
   </ul>
 
   <h2>7. Known limitations of the model</h2>
@@ -1710,7 +1729,7 @@
   <p>The simulator may refer to, or rely on, services run by others, such as AI services you choose to use, the website host and Cloudflare Web Analytics. Those services follow their own terms and privacy policies. The authors do not control them and are not responsible for their content, availability or how they handle your information.</p>
 
   <h2>11. Privacy</h2>
-  <p>The calculations run entirely in your browser. The simulator does not collect or send anything you enter or paste, and it sets no cookies. So that your open tabs survive a refresh, your inputs, pasted text and your choice of phone or desktop view and of Lite or Advanced mode are saved in this browser's own local storage on your device. They are never sent to us or to anyone else, and other people can only see them if they use the same browser profile, so avoid saving sensitive information on a shared computer. You can <a href="#" data-clear-saved>Erase saved data</a> at any time; clearing your browser's site data also removes it. The website hosting this page may keep standard access logs under its own policies.</p>
+  <p>The calculations run entirely in your browser. The simulator does not collect or send anything you enter or paste, and it sets no cookies. So that your open tabs survive a refresh, your inputs, pasted text and your choice of phone or desktop view and of Simple or Advanced mode are saved in this browser's own local storage on your device. They are never sent to us or to anyone else, and other people can only see them if they use the same browser profile, so avoid saving sensitive information on a shared computer. You can <a href="#" data-clear-saved>Erase saved data</a> at any time; clearing your browser's site data also removes it. The website hosting this page may keep standard access logs under its own policies.</p>
   <p>To see how many people use the simulator, we count anonymous visits with Cloudflare Web Analytics, which sets no cookies and does not track you across sites. It receives basic visit information, such as the page address, the site you came from, your browser and device type, your approximate country and how quickly the page loaded, but never anything you enter or paste. As with any request to a website, Cloudflare also sees your IP address; it says it does not use it to identify or track visitors. Cloudflare handles this information under its own privacy policy. Visits are not counted at all if your browser sends a Do Not Track or Global Privacy Control signal. You can turn the count off for this browser at any time with this link: <a href="#" data-count-toggle>Don't count my visits</a>. This browser then stops loading the counter from your next visit, and the choice is kept in its local storage. Erasing saved data does not undo it, but clearing your browser's site data does.</p>
 
   <h2>12. No warranty</h2>
@@ -3153,11 +3172,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
       "");
   }
   function buildPrompt() {
-    var ticker = document.getElementById('promptTicker').value.trim() || '[TICKER]';
+    var ticker = document.getElementById('promptTicker').value.trim() || '[COMPANY NAME]';
     var todayStr = new Date().toISOString().slice(0, 10);
-    return "I'm researching the company behind ticker " + ticker + " for an educational biotech scenario simulator " +
+    return "I'm researching the company " + ticker + " for an educational biotech scenario simulator " +
       "(possible revenue and profit scenarios, not a valuation or stock forecast). The simulator only works for companies that develop or sell " +
-      "drugs (medicines or therapeutics: small molecules, biologics, cell and gene therapies, vaccines). First confirm the company name behind this ticker, " +
+      "drugs (medicines or therapeutics: small molecules, biologics, cell and gene therapies, vaccines). First confirm the company's full name (if I gave a stock ticker instead of a name, use the company behind it), " +
       "then answer this line before anything else, labeled exactly like this:\n" +
       "D. Develops or sells drugs: Yes or No, with a few words on what the company's main products are\n" +
       "Answer No for companies whose business is research tools, lab instruments, diagnostics, medical devices, contract services or software, " +
@@ -3714,7 +3733,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     }
     var parsed = parsePastedResearch(text);
     if (parsed.drugAnswer === 'no') {
-      var tick = document.getElementById('promptTicker').value.trim().toUpperCase();
+      var tick = document.getElementById('promptTicker').value.trim();
       var who = (parsed.company && parsed.company.name) ? parsed.company.name.replace(/\.+$/, '') : (tick || 'this company');
       status.textContent = 'The AI\u2019s answer says ' + who + ' does not develop or sell drugs, so this simulator can\u2019t model it and nothing was filled in. ' +
         'It only covers companies with drugs in development or on the market.';
@@ -4022,7 +4041,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   function tabColor(t) { return SERIES_COLORS[t.slot % SERIES_COLORS.length]; }
   function tabTitle(t, i) {
     var tick = i === activeTab && !compareOpen ? document.getElementById('promptTicker').value.trim() : String(t.ticker || '').trim();
-    return tick ? tick.toUpperCase() : (t.companyName || 'New analysis');
+    return t.companyName || tick || 'New analysis';
   }
   function setAccordion(btnId, bodyId, open) {
     var b = document.getElementById(bodyId), btn = document.getElementById(btnId);
@@ -4640,6 +4659,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   function simpleSyncStart() {
     var t = document.getElementById('ssTicker'), p = document.getElementById('ssPaste');
     if (t && document.activeElement !== t) t.value = document.getElementById('promptTicker').value;
+    ssNeedName();
     if (p && document.activeElement !== p) p.value = document.getElementById('pasteResearchText').value;
     var st = document.getElementById('ssGoStatus'); if (st) st.textContent = '';
   }
@@ -4734,7 +4754,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   function renderSimpleHero(model, sc) {
     var v = document.getElementById('shValue'); if (!v) return;
     var nm = document.getElementById('shName');
-    if (nm) { var t = tabs[activeTab]; nm.textContent = (t && t.companyName) || document.getElementById('promptTicker').value.trim().toUpperCase() || 'Your company'; }
+    if (nm) { var t = tabs[activeTab]; nm.textContent = (t && t.companyName) || document.getElementById('promptTicker').value.trim() || 'Your company'; }
     var nc = document.getElementById('simpleNewCompany');
     if (nc) { var full = tabs.length >= MAX_TABS; nc.disabled = full; nc.title = full ? 'Up to ' + MAX_TABS + ' tabs. Close one to add another company.' : 'Open a new tab for another company'; }
     if (!sc || !model || !model.sim) { v.textContent = ''; return; }
@@ -4757,14 +4777,26 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     setSimpleStep(simpleReady(lastModel) ? 'results' : (assets.length ? 'review' : 'get'), false);
   }
   // Start card: its boxes drive the real prompt, paste box and "Fill in the form" button.
+  function ssNeedName() {
+    var ss = document.getElementById('simpleStart'), t = document.getElementById('ssTicker');
+    if (ss && t) ss.classList.toggle('need-name', !t.value.trim());
+  }
   document.getElementById('ssTicker').addEventListener('input', function () {
     var p = document.getElementById('promptTicker'); p.value = this.value; p.dispatchEvent(new Event('input', { bubbles: true }));
+    ssNeedName();
   });
   document.getElementById('ssPaste').addEventListener('input', function () {
     var p = document.getElementById('pasteResearchText'); p.value = this.value; p.dispatchEvent(new Event('input', { bubbles: true }));
     document.getElementById('ssGoStatus').textContent = '';
   });
   document.getElementById('ssCopy').addEventListener('click', function () {
+    var nameBox = document.getElementById('ssTicker');
+    if (!nameBox.value.trim()) {
+      var hint = document.getElementById('ssCopyStatus');
+      hint.textContent = 'Type the company name first.'; hint.classList.add('ss-warn'); nameBox.focus();
+      setTimeout(function () { hint.textContent = 'Use an AI that can search the web.'; hint.classList.remove('ss-warn'); }, 2500);
+      return;
+    }
     document.getElementById('copyPromptBtn').click();
     var btn = this, lab = document.getElementById('ssCopyLabel'), st = document.getElementById('ssCopyStatus');
     setTimeout(function () {
@@ -4795,9 +4827,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   function renderModeToggle() {
     var b = document.getElementById('modeToggle'); if (!b) return;
     var simple = isSimple();
-    b.innerHTML = (simple ? 'Advanced' : 'Lite') + '<span class="mt-long"> mode</span>';
-    b.setAttribute('aria-label', simple ? 'Switch to Advanced mode' : 'Switch to Lite mode');
-    b.title = simple ? 'Advanced mode: every figure and setting' : 'Lite mode: the simpler view';
+    b.innerHTML = (simple ? 'Advanced' : 'Simple') + '<span class="mt-long"> mode</span>';
+    b.setAttribute('aria-label', simple ? 'Switch to Advanced mode' : 'Switch to Simple mode');
+    b.title = simple ? 'Advanced mode: every figure and setting' : 'Simple mode: the simpler view';
   }
   function setMode(simple, save) {
     document.documentElement.classList.toggle('simple', simple);
