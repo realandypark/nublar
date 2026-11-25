@@ -1398,10 +1398,9 @@
           <div class="field"><label for="prelaunchYears">Pre-launch selling period</label><div class="field-row"><input type="number" id="prelaunchYears" value="" step="0.5" min="0"><span class="unit">yrs</span></div></div>
           <div class="field"><label for="selfSellShare">Self-commercialized above</label><div class="field-row"><input type="number" id="selfSellShare" value="" step="5" min="0" max="100"><span class="unit">%</span></div></div>
           <div class="field"><label for="horizonMax">Years to simulate</label><div class="field-row"><input type="number" id="horizonMax" value="" step="1" min="3" max="40"><span class="unit">yrs</span></div></div>
-          <div class="field"><label for="windDown">Wind-down when idle</label><div class="field-row"><select id="windDown"><option value="" selected>Choose</option><option value="yes">Yes, stop overhead</option><option value="no">No, keep paying it</option></select></div></div>
       </div>
     </div>
-    <p class="disclaimer-note" data-ph-fold="How these settings are used" data-fold-desktop>Pre-launch selling costs are spread evenly over the pre-launch period before each launch. A drug with a company share of sales at or above the self-commercialized threshold keeps the company running until its sales fade; below it, the drug counts as passive royalty income. Years to simulate is the longest period the results cover. With wind-down, overhead stops once the company has nothing left to develop or sell; without it, overhead is charged every year.</p>
+    <p class="disclaimer-note" data-ph-fold="How these settings are used" data-fold-desktop>Pre-launch selling costs are spread evenly over the pre-launch period before each launch. A drug with a company share of sales at or above the self-commercialized threshold is treated as sold by the company itself, so a missing selling cost is flagged; below it, the drug counts as royalty income. Years to simulate is the longest period the results cover. Corporate overhead is charged in every year shown.</p>
   </div>
 
   <!-- Pipeline Table -->
@@ -1481,7 +1480,7 @@
 
       <div class="chart-block" id="cashBlock">
         <div class="chart-title" id="cashChartTitle">Cash balance</div>
-        <p class="chart-note prose" data-ph-fold="How to read this chart">Cash today plus each year's net income. If the line falls below $0 (red), the company would need outside funding, such as an equity raise, a loan or a partner. <span id="windDownNote"></span></p>
+        <p class="chart-note prose" data-ph-fold="How to read this chart">Cash today plus each year's net income. If the line falls below $0 (red), the company would need outside funding, such as an equity raise, a loan or a partner. Overhead is charged every year, and drugs the company may start later are not included, so later years can show losses once today’s drugs stop selling.</p>
         <div class="chart-wrap"><canvas id="cashChart" aria-label="Cash balance by year"></canvas></div>
       </div>
       <div class="sh-seg simple-only" id="shSeg" role="group" aria-label="Chart">
@@ -1553,7 +1552,7 @@
   <h2>1. Basic principles</h2>
   <ul>
     <li><b>Scope.</b> The simulator models companies that develop or sell drugs. If a pasted AI answer says the company does not (for example a research-tools, diagnostics or device company), nothing is filled in and no results are shown.</li>
-    <li><b>Simple mode and Advanced mode.</b> Simple mode is a simpler view of the same simulator: it uses the same research prompt, the same reading of the AI's answer and the same calculations, and only shows fewer figures at a time. Advanced mode shows and lets you edit every input. Both are free, and switching between them never changes a result.</li>
+    <li><b>Simple mode and Advanced mode.</b> Simple mode is a simpler view of the same simulator: it uses the same research prompt, the same reading of the AI's answer and the same calculations, and only shows fewer figures at a time. Advanced mode shows and lets you edit every input. Simple mode starts from a pasted AI answer; <b>Enter figures manually</b> switches to Advanced mode, where every figure can be typed by hand without any AI. Both are free, and switching between them never changes a result.</li>
     <li><b>Deterministic.</b> You decide which drugs are assumed approved and which fail. The simulator never assigns a probability of success and never averages outcomes.</li>
     <li><b>Yearly periods from today.</b> Year 1 is the next 12 months from the day you open the page, year 2 the 12 months after that, and so on. Each period is labeled with the calendar year its midpoint falls in. These are not the company's fiscal years.</li>
     <li><b>All money in millions of US dollars ($M)</b>, except price per patient, which is in dollars per patient per year.</li>
@@ -1578,9 +1577,8 @@
   <table class="method-table">
     <tr><th>Input</th><th>Unit</th><th>Used in</th></tr>
     <tr><td>Pre-launch selling period</td><td>years</td><td>How long before each launch the drug's pre-launch selling spend is spread (section 5).</td></tr>
-    <tr><td>Self-commercialized above</td><td>%</td><td>Drugs with a company share of sales at or above this level keep the company running until their sales fade (section 7).</td></tr>
+    <tr><td>Self-commercialized above (optional)</td><td>%</td><td>Never used in the calculation. Drugs with a company share of sales at or above this level are treated as sold by the company itself, so a missing yearly selling cost is flagged (section 10). Left blank, 50% is used for that check.</td></tr>
     <tr><td>Years to simulate</td><td>years</td><td>Upper limit on the period shown (section 1).</td></tr>
-    <tr><td>Wind-down when idle</td><td>Yes / No</td><td>Whether overhead stops once nothing is left to develop or sell (section 7).</td></tr>
   </table>
   <h3>Per drug</h3>
   <table class="method-table">
@@ -1592,7 +1590,7 @@
     <tr><td>Price / patient</td><td>$ per year</td><td>Peak sales.</td></tr>
     <tr><td>Peak penetration</td><td>%</td><td>Peak sales.</td></tr>
     <tr><td>Years to launch</td><td>years from today</td><td>When sales start, the milestone year, and the R&amp;D schedule. 0 means already on sale.</td></tr>
-    <tr><td>Ramp to peak</td><td>years</td><td>Time from launch to peak sales.</td></tr>
+    <tr><td>Ramp to peak</td><td>years</td><td>Time from launch to peak sales. You can enter your own figure at any time; it replaces the AI’s. The prompt asks the AI for, in order of preference, company guidance, a named analyst estimate, a named comparable drug’s launch, or a typical figure for that kind of drug, labelled as an estimate. For a drug already on sale it is the years left until sales peak (0 if they already have). If the answer gives no figure, 3 years is used and the box is outlined in red until you change it.</td></tr>
     <tr><td>Years to patent cliff</td><td>years from today</td><td>When the drug loses market exclusivity and sales start to fade.</td></tr>
     <tr><td>Fade after cliff</td><td>years</td><td>Time for sales to fall to zero after the patent cliff.</td></tr>
     <tr><td>Company share of sales</td><td>%</td><td>Share of the drug's sales that is the company's revenue (100% if it sells the drug itself; a royalty rate if a partner sells it).</td></tr>
@@ -1604,14 +1602,14 @@
     <tr><td>Pre-launch selling</td><td>$M total</td><td>Launch preparation spending before launch.</td></tr>
     <tr><td>Yearly selling cost</td><td>$M per year</td><td>Sales force, marketing and market access once the drug is launched (section 4). For a drug a partner sells, 0.</td></tr>
   </table>
-  <p>A drug is only simulated when patients, price, penetration, margin, remaining R&amp;D and annual burn are all filled in. Blank optional drug fields (company share of sales, approval milestones, fade after cliff, pre-launch selling, yearly selling cost) count as 100%, 0, 0, 0 and 0. A blank yearly selling cost on a drug the company sells itself is outlined in red, and the summary warns that its profit may be overstated. Percentages are limited to 0 to 100 and other values to zero or more.</p>
+  <p>A drug is only simulated when patients, price, penetration, margin, remaining R&amp;D and annual burn are all filled in. The optional drug fields (company share of sales, approval milestones, fade after cliff, pre-launch selling, yearly selling cost) are used in the calculation whenever they are filled in. Left blank, they are treated as 100% for company share and 0 for the rest, which can make profit look higher than it would be. A blank yearly selling cost on a drug the company sells itself is outlined in red, and a “Worth a look” note warns that its profit may be overstated. Percentages are limited to 0 to 100 and other values to zero or more.</p>
 
   <h2>3. A drug's sales</h2>
   <div class="method-formula">Peak sales ($M per year) = patients &times; peak penetration &times; price per patient &divide; 1,000,000</div>
   <p>Sales follow a simple shape, measured as a share of peak sales:</p>
   <ul>
     <li><b>Before launch:</b> 0%.</li>
-    <li><b>Ramp:</b> rises in a straight line from 0% at launch to 100% after the ramp to peak. A ramp of 0 means sales start at 100%.</li>
+    <li><b>Ramp:</b> rises in a straight line from 0% at launch to 100% after the ramp to peak. A ramp of 0 means sales start at 100%. The length of the ramp is an input, not something the simulator works out: the AI’s answer suggests it, and you can type your own in Advanced mode at any time (see <b>Ramp to peak</b> in section 2).</li>
     <li><b>Plateau:</b> stays at 100% until the patent cliff.</li>
     <li><b>Fade:</b> falls in a straight line from the level reached at the patent cliff to 0% over the fade after cliff. A fade of 0 means sales stop at once. If the patent cliff comes during the ramp, the fade starts from the level reached at that point.</li>
   </ul>
@@ -1636,15 +1634,9 @@
   <h2>6. If a drug fails</h2>
   <p>A failing drug earns no revenue and receives no milestone. It spends exactly as it would if approved up to its next catalyst (or launch, if that comes first), and nothing after that, including any pre-launch spend that would have fallen later. This is the cheapest way to fail: in reality a drug can also fail later, after more money has been spent.</p>
 
-  <h2>7. Corporate overhead and wind-down</h2>
-  <p>Overhead is charged each year while the company is still operating, prorated for a partial year. With <b>wind-down set to Yes</b>, the company operates until the latest of these points:</p>
-  <ul>
-    <li>for each approved drug with a company share at or above the self-commercialized threshold: its patent cliff plus fade after cliff (when its sales reach zero);</li>
-    <li>for each approved drug below that threshold (royalty or minority share): its launch, because royalty income is treated as passive;</li>
-    <li>for each failing drug: its next catalyst (or launch, if earlier).</li>
-  </ul>
-  <p>After that point overhead stops. With <b>wind-down set to No</b>, overhead is charged in every year shown.</p>
-
+  <h2>7. Corporate overhead</h2>
+  <p>Overhead is what it costs to keep the company open each year: offices, management and administration. It is charged in full in every year shown, because a company usually keeps operating after its current drugs launch or fail.</p>
+  <p>The simulator only includes the drugs listed today. Drugs the company may start in the future are not modeled: they would add their own costs and, perhaps, revenue. So once today&#8217;s drugs stop selling, later years can show steady losses from overhead alone. Shorten <b>Years to simulate</b> to focus on the years today&#8217;s drugs cover.</p>
   <h2>8. Interest, tax and net income</h2>
   <div class="method-formula">Operating profit = sum of product profit &minus; overhead &minus; R&amp;D and launch spending</div>
   <div class="method-formula">Profit before tax = operating profit &minus; interest expense</div>
@@ -1674,7 +1666,7 @@
     <tr><td>Lifetime revenue (pipeline table)</td><td>The company's total revenue from the drug if approved, over its whole life (until its sales fade to zero), including the milestone, before any costs. Not limited to the period shown.</td></tr>
     <tr><td>Drug by Drug table</td><td>For each drug if approved: launch year, peak yearly company revenue, total company revenue and total product profit over the period shown; its remaining R&amp;D; and what it would spend if it fails (section 6).</td></tr>
     <tr><td>Compare tab</td><td>The same results, calculated the same way, for each open tab from its own inputs.</td></tr>
-    <tr><td>Cost checks</td><td>Warnings in the summary that never change a number: a drug the company sells itself with no yearly selling cost; and, when reported SG&amp;A is entered, overhead plus the yearly selling costs of drugs already on sale coming out more than 25% above it (costs possibly counted twice; pre-launch spending is left out of this test because it is new launch preparation), or overhead, those selling costs and the coming year's pre-launch selling together coming out more than 25% below it (costs possibly missing); when reported R&amp;D is entered, the annual burn of all drugs switched on adding up to less than 70% of it (drug costs possibly too low, or research not tied to a listed drug, which the simulation does not count) or more than 140% of it (possibly too high or counted twice); and a note naming any program that is switched off, since a switched-off program is left out entirely, including its current costs, while a program marked as failing keeps its costs until its next readout.</td></tr>
+    <tr><td>Cost checks</td><td>Warnings that never change a number, shown in the summary in Advanced mode and in the “Worth a look” box on the results screen in Simple mode: a drug the company sells itself (company share at or above <b>Self-commercialized above</b>) with no yearly selling cost; and, when reported SG&amp;A is entered, overhead plus the yearly selling costs of drugs already on sale coming out more than 25% above it (costs possibly counted twice; pre-launch spending is left out of this test because it is new launch preparation), or overhead, those selling costs and the coming year's pre-launch selling together coming out more than 25% below it (costs possibly missing); when reported R&amp;D is entered, the annual burn of all drugs switched on adding up to less than 70% of it (drug costs possibly too low, or research not tied to a listed drug, which the simulation does not count) or more than 140% of it (possibly too high or counted twice); and a note naming any program that is switched off, since a switched-off program is left out entirely, including its current costs, while a program marked as failing keeps its costs until its next readout.</td></tr>
   </table>
   <p>Figures on screen are rounded for display ($1.2B, $850M); the calculations use the unrounded values.</p>
 
@@ -1686,6 +1678,7 @@
     <li>Limits on using tax losses (for example, the US rule allowing losses to offset only 80% of taxable income in a year): losses here offset profit in full.</li>
     <li>Repayment or refinancing of debt, new share issues, dilution and the timing of cash versus profit.</li>
     <li>Later-stage failures, delays and partial approvals: each drug is either approved on your timeline or fails at its next readout.</li>
+    <li>Drugs the company may start in the future: only the drugs listed today are simulated, while overhead continues every year.</li>
     <li>Anything about a company that is not entered as an input.</li>
   </ul>
   <p>Results are hypothetical calculations from your inputs, not forecasts, valuations or investment advice. See the <a href="#legal" data-open-legal>disclaimer and terms of use</a>.</p>
@@ -1728,7 +1721,7 @@
     <li>You are responsible for every figure you enter or accept. Figures are not checked or verified by Project Nublar.</li>
     <li>The optional research prompt is a convenience. AI answers can be wrong, incomplete, out of date or invented. The authors do not endorse or partner with any AI service. Check every suggested figure against primary sources such as company filings.</li>
     <li>Automatic form filling reads AI answers by pattern matching and can put a figure in the wrong field. Review every value after pasting.</li>
-    <li>Simple mode shows only the main figures. Results still use every figure from the AI's answer, including those not shown there. You can see and change all of them in Advanced mode, and you remain responsible for checking them. "Advanced" refers only to the number of settings shown; it does not make the simulator suitable for professional or investment use.</li>
+    <li>Simple mode shows only the main figures. Results still use every figure from the AI's answer, including those not shown there. You can see and change all of them in Advanced mode, and you remain responsible for checking them. Using AI is optional: <b>Enter figures manually</b> opens Advanced mode, where you can type every figure yourself. "Advanced" refers only to the number of settings shown; it does not make the simulator suitable for professional or investment use.</li>
   </ul>
 
   <h2>7. Known limitations of the model</h2>
@@ -1739,6 +1732,7 @@
     <li>Debt is not included: only the interest expense you enter is counted. Repaying or refinancing debt would reduce the cash shown. No new financing, share issuance or dilution is modeled.</li>
     <li>Tax losses offset all taxable profit. Some countries limit this, so taxes in profitable years may be understated.</li>
     <li>Revenue follows a simplified shape: a straight ramp to peak, flat until the patent cliff, then a straight fade. Prices, costs and market size do not change over time.</li>
+    <li>Only the drugs listed today are simulated. Corporate overhead is charged every year, but drugs the company may start in the future are not, so later years can show losses that a real company might offset with new programs.</li>
   </ul>
   <p>The <a href="#methodology" data-open-method>methodology</a> explains every calculation and lists the other simplifications.</p>
 
@@ -2004,7 +1998,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
      ============================================================ */
   var el = {};
   ['totalCash', 'monthsToCatalyst', 'baseOverhead',
-   'taxRate', 'nolCarry', 'interestExpense', 'windDown',
+   'taxRate', 'nolCarry', 'interestExpense',
    'prelaunchYears', 'selfSellShare', 'horizonMax', 'reportedSGA', 'reportedRnD'].forEach(function (id) {
     el[id] = document.getElementById(id);
   });
@@ -2029,7 +2023,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     company.totalCash = Math.max(0, num(src.totalCash, 0));
     company.monthsToCatalyst = Math.max(0.1, num(src.monthsToCatalyst, 18));
     company.baseOverhead = Math.max(0, num(src.baseOverhead, 30));
-    company.windDown = src.windDown ? String(src.windDown.value) !== 'no' : true;
     company.taxRate = Math.min(100, Math.max(0, num(src.taxRate, 21)));
     company.nolCarry = Math.max(0, num(src.nolCarry, 0));
     company.interestExpense = Math.max(0, num(src.interestExpense, 0));
@@ -2051,7 +2044,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     ['totalCash', 'total cash'], ['monthsToCatalyst', 'months to next catalyst'],
     ['baseOverhead', 'corporate overhead'], ['taxRate', 'tax rate'], ['nolCarry', 'tax-loss carryforward'],
     ['interestExpense', 'interest expense'], ['prelaunchYears', 'pre-launch selling period'],
-    ['selfSellShare', 'self-commercialized threshold'], ['horizonMax', 'years to simulate'], ['windDown', 'wind-down']
+    ['horizonMax', 'years to simulate']
   ];
   function missingCompanyFields(getVal) {
     return REQUIRED_CO.filter(function (r) { var v = getVal(r[0]); return v === null || v === undefined || String(v).trim() === ''; })
@@ -2346,15 +2339,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     });
     if (extra) for (var e = 0; e < H; e++) { rev[e] += extra.rev[e]; contrib[e] += extra.contrib[e]; rnd[e] += extra.rnd[e]; }
     var overhead = Math.max(0, co.baseOverhead || 0), interest = Math.max(0, co.interestExpense || 0);
-    // A company with nothing left to develop or sell is assumed to wind
-    // down: overhead runs only until the last approved drug's patent cliff
-    // or the last failed drug's catalyst, whichever is later.
-    var activeEnd = extra ? (co.horizonMax || HORIZON_MAX) : 0;
-    // A drug the company mostly sells itself keeps it running until its
-    // sales fade out; a royalty or minority-share drug (company share under
-    // 50%) is passive income and keeps it running only until launch.
-    items.forEach(function (it, i) { activeEnd = Math.max(activeEnd, flags[i] ? (it.tl.share >= (isFinite(co.selfSellShare) ? co.selfSellShare : 50) / 100 ? it.excl : it.tl.L) : it.failEnd); });
-    if (co.windDown === false) activeEnd = Infinity;
+    // Overhead is charged in every year shown: the company keeps operating.
+    // Drugs it may start later are not modeled.
+    var activeEnd = Infinity;
     var rate = Math.min(100, Math.max(0, isFinite(co.taxRate) ? co.taxRate : 21)) / 100;
     var nol = Math.max(0, co.nolCarry || 0), cash = co.totalCash;
     var op = [], pre = [], tax = [], net = [], cashArr = [];
@@ -2713,7 +2700,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
       line('Revenue from a drug, each year', 'Peak sales × share of peak that year × company share of sales, plus any milestone in the approval year. Share of peak is 0 before launch, ramps to 100%, holds until the patent cliff, then fades to 0 over the fade years. Peak sales = patients × penetration × price.') +
       line('Product profit', 'Company revenue × the drug\'s margin (after manufacturing, royalties paid and per-patient costs) + milestones − its yearly selling cost (sales force, marketing, market access), paid in full from launch to the patent cliff and falling with sales after it.') +
       line('R&amp;D and launch spending', 'Trial burn until the drug\'s next catalyst, then the rest of its remaining R&amp;D until launch, plus pre-launch selling costs ' + (company.prelaunchYears > 0 ? 'spread over the ' + company.prelaunchYears + ' year' + (company.prelaunchYears === 1 ? '' : 's') + ' before launch' : 'spent at launch') + '. A drug you mark as failing stops all spending at its next catalyst and earns no revenue.') +
-      line('Operating profit', 'Σ product profit − corporate overhead (' + fmtBig(company.baseOverhead) + '/yr) − R&amp;D spending', undefined, 'Overhead stops once the company has nothing left to develop or sell: after the last approved drug it sells itself fades out, or the last failed drug stops. Drugs with a company share below ' + (company.selfSellShare != null ? company.selfSellShare : 50) + '% (royalty-type) do not keep it running. Set by the wind-down setting in Company and model settings.') +
+      line('Operating profit', 'Σ product profit − corporate overhead (' + fmtBig(company.baseOverhead) + '/yr) − R&amp;D spending', undefined, 'Overhead is charged in every year shown. Drugs the company may start in the future are not modeled, so later years can show losses once today\u2019s drugs stop selling.') +
       line('Net income (est.)', 'Operating profit − interest (' + fmtBig(company.interestExpense) + '/yr) − tax. Tax is ' + (company.taxRate || 0) + '% of profit after past losses are used up (starting loss carryforward ' + fmtBig(company.nolCarry) + ', plus any losses in the simulation).') +
       line('Cash balance', 'Cash today (' + fmtBig(company.totalCash) + ') + cumulative net income. Below $0 means the company would need outside funding (a raise, a loan or a partner). Debt is not included: only the interest expense you entered is counted, and no debt is repaid.') +
       line('Cash runway today', 'Cash ÷ (overhead + trial spend + interest − next-year profit of marketed drugs) × 12', fmtRunway(model.runwayMonths)) +
@@ -2729,8 +2716,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     renderMath(model);
     var title = document.getElementById('revChartTitle');
     if (title) title.textContent = sc ? 'Yearly revenue and net income: ' + sc.label : 'Yearly revenue and net income';
-    var wn = document.getElementById('windDownNote');
-    if (wn) wn.textContent = company.windDown === false ? 'Overhead continues every year (wind-down is set to No).' : 'Assumes the company winds down (overhead stops) once nothing is left to develop or sell, as set in Company and model settings.';
     var ct = document.getElementById('cashChartTitle');
     if (ct) ct.textContent = sc ? 'Cash balance: ' + sc.label : 'Cash balance';
   }
@@ -3074,13 +3059,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
       "S. Reported SG&A ($M, last 12 months): total selling, general and administrative expense from the latest filings, label this line exactly \"S.\". " +
       "R. Reported R&D ($M, last 12 months): total research and development expense from the latest filings, label this line exactly \"R.\". " +
       "It is used only to cross-check items 8, 26 and 27, never in the calculation\n\n" +
-      "=== MODEL SETTINGS (label these exactly M1 to M4, not with numbers) ===\n" +
+      "=== MODEL SETTINGS (label these exactly M1 to M3, not with numbers) ===\n" +
       "These are modeling assumptions, not disclosed facts. Give your suggested value for this company, label it \"(suggestion)\" and say in a few words why.\n" +
       "M1. Pre-launch selling period (years): how many years before each launch the company would start spending on launch and selling preparation (often 1 to 2)\n" +
       "M2. Self-commercialized threshold (%): the company's share of a drug's sales at or above which it sells the drug itself rather than earning a royalty from a partner (50 means a drug it keeps half or more of counts as its own)\n" +
-      "M3. Years to simulate: years from today until the last of its drugs' sales would have faded after patent expiry, between 3 and 40\n" +
-      "M4. Wind-down: answer Yes if the company would most likely stop its corporate overhead once it has nothing left to develop or sell itself, or No if it would keep operating. " +
-      "Answer No if it would keep its own operations after its drugs launch through partners, for example manufacturing for a partner, selling in territories it kept, or running other businesses\n\n" +
+      "M3. Years to simulate: years from today until the last of its drugs' sales would have faded after patent expiry, between 3 and 40\n\n" +
       "=== PER PIPELINE ASSET (repeat this block for each " + scope + ") ===\n" +
       "Cover EVERY drug program the company discloses on its website, pipeline page or filings, including preclinical and IND-enabling programs, " +
       "so two separate runs of this prompt list the same set of assets. List them from most to least advanced (marketed first, then by phase, then by expected catalyst date). " +
@@ -3541,7 +3524,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
       // "D. Develops or sells drugs: Yes/No" (lettered, so numbering never shifts).
       var dl = line.match(/^D\\?[\.\):]\s*\**\s*develops or sells drugs\**\s*:?\s*\**\s*(.+)$/i);
       if (dl) { drugAnswer = /^\W*no\b/i.test(dl[1]) ? 'no' : (/^\W*yes\b/i.test(dl[1]) ? 'yes' : drugAnswer); return; }
-      // Model settings are lettered M1-M4 so they never shift the numbered items.
+      // Model settings are lettered M1-M3 so they never shift the numbered items (an older M4 line is ignored).
       var ms = line.match(/^M\s*([1-4])\\?[\.\):]\s*(.+)$/i);
       if (ms) {
         var mc = ms[2].replace(/\*/g, '').replace(/\\([.:)])/g, '$1'), mv = valueAfterLabel(mc);
@@ -3549,7 +3532,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
           case '1': company.prelaunchYears = extractNumber(mv, 'plain'); break;
           case '2': company.selfSellShare = extractNumber(mv, 'plain'); break;
           case '3': company.horizonMax = extractNumber(mv, 'plain'); break;
-          case '4': company.windDown = /^\W*no\b/i.test(mv) ? 'no' : (/^\W*yes\b/i.test(mv) ? 'yes' : null); break;
+          case '4': break; // older answers may include a wind-down line; it is no longer used
         }
         return;
       }
@@ -3679,7 +3662,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     if (c.horizonMax !== undefined && c.horizonMax !== null) setIf(el.horizonMax, Math.min(40, Math.max(3, Math.round(c.horizonMax))));
     if (c.reportedSGA !== null && c.reportedSGA !== undefined && isFinite(c.reportedSGA)) { el.reportedSGA.value = c.reportedSGA; coAi.reportedSGA = true; filledCount++; }
     if (c.reportedRnD !== null && c.reportedRnD !== undefined && isFinite(c.reportedRnD)) { el.reportedRnD.value = c.reportedRnD; coAi.reportedRnD = true; filledCount++; }
-    if (c.windDown === 'yes' || c.windDown === 'no') { el.windDown.value = c.windDown; coAi.windDown = true; filledCount++; }
 
     var assetCount = 0;
     var has = function (v) { return v !== null && v !== undefined && isFinite(v); };
@@ -4254,7 +4236,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   window.__nublarLoadExample = function () {
     assets = exampleAssets(); el.totalCash.value = 150; el.monthsToCatalyst.value = 18;
     el.baseOverhead.value = 30; el.taxRate.value = 21; el.nolCarry.value = 0; el.interestExpense.value = 0;
-    el.prelaunchYears.value = 2; el.selfSellShare.value = 50; el.horizonMax.value = 20; el.windDown.value = 'yes';
+    el.prelaunchYears.value = 2; el.selfSellShare.value = 50; el.horizonMax.value = 20;
     setResultsShown(true); recalcAll();
   };
 
@@ -4524,9 +4506,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     interestExpense: 'What the company pays each year on borrowed money (loans, convertible notes, bonds), from the income statement. Subtracted every year and counted in the cash runway. Repaying the debt itself is not included. Enter 0 if there is no debt.',
     // Model settings
     prelaunchYears: 'How many years before each launch the drug’s pre-launch selling spend is spread out, evenly. Typically 1 to 2 years.',
-    selfSellShare: 'If the company keeps at least this share of a drug’s sales, it is treated as selling the drug itself: that drug keeps the company running and needs a yearly selling cost. Below it, the drug counts as royalty income from a partner.',
+    selfSellShare: 'If the company keeps at least this share of a drug’s sales, it is treated as selling the drug itself, so a missing yearly selling cost is flagged. Below it, the drug counts as royalty income from a partner. Never used in the calculation; if left blank, 50% is used for the check.',
     horizonMax: 'The longest period the results cover, in years from today.',
-    windDown: 'Yes: overhead stops once the company has nothing left to develop or sell. No: overhead is charged every year, for example because the company keeps operating through partners.',
     // Pipeline table
     th_on: 'Untick to leave this drug out entirely, including what it costs today. To assume it fails instead, keep it ticked and mark it as failing in the drug picker under Results: its costs then run until its next readout.',
     th_asset: 'The drug or program name. Click ƒx to see and edit its timing, costs and the calculation.',
@@ -4697,7 +4678,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   // Labels for any required company figure that is missing (shown only then).
   var SIMPLE_CO_LABEL = { totalCash: 'Cash ($M)', monthsToCatalyst: 'Months to next big news', baseOverhead: 'Corporate overhead per year ($M)', taxRate: 'Tax rate (%)',
     nolCarry: 'Tax-loss carryforward ($M)', interestExpense: 'Interest per year ($M)', prelaunchYears: 'Years of selling before launch', selfSellShare: 'Sells it alone when its share is at least (%)',
-    horizonMax: 'Years to simulate', windDown: 'Wind down after the last drug?' };
+    horizonMax: 'Years to simulate' };
   // Drug figures a drug needs before it can be simulated, with the field each one edits.
   var SIMPLE_DRUG_REQ = [['remainingRnDOverride', 'R&D still to spend ($M)'], ['annualBurnOverride', 'Trial spending per year ($M)'],
     ['penetrationOverride', 'Share of patients treated at peak (%)'], ['marginOverride', 'Profit margin (%)']];
@@ -4751,12 +4732,23 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     var see = document.getElementById('simpleSeeResults'); if (see) see.disabled = !simpleReady(model);
   }
   // Editing a figure in Simple mode follows exactly the same rules as Advanced mode.
+  // Any number box with a minimum (Advanced mode): a value below it snaps to the minimum,
+  // so the box always shows the figure the calculation actually uses.
+  document.addEventListener('change', function (e) {
+    var t = e.target;
+    if (!t || t.tagName !== 'INPUT' || t.type !== 'number' || t.min === '' || t.value === '') return;
+    var v = parseFloat(t.value), mn = parseFloat(t.min);
+    if (isFinite(v) && isFinite(mn) && v < mn) { t.value = String(mn); t.dispatchEvent(new Event('input', { bubbles: true })); }
+  }, true);
   document.addEventListener('change', function (e) {
     var t = e.target; if (!t || !t.getAttribute) return;
     var ck = t.getAttribute('data-s-co');
     if (ck) {
       var raw = String(t.value).trim();
-      el[ck].value = t.tagName === 'SELECT' ? t.value : (raw === '' ? '' : String(parseLooseNumber(raw)));
+      var cn = raw === '' ? null : parseLooseNumber(raw);
+      // Company figures are never negative: show the value the calculation uses.
+      if (cn !== null && isFinite(cn) && cn < 0) cn = 0;
+      el[ck].value = t.tagName === 'SELECT' ? t.value : (cn === null ? '' : String(cn));
       el[ck].dispatchEvent(new Event('input', { bubbles: true }));
       el[ck].dispatchEvent(new Event('change', { bubbles: true }));
       t.blur(); renderSimpleReview(lastModel);
