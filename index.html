@@ -410,7 +410,7 @@
   .gauge-zone.red{ background:linear-gradient(90deg, rgba(255,67,61,0.55), rgba(255,67,61,0.35)); }
   .gauge-zone.amber{ background:rgba(245,165,36,0.4); }
   .gauge-zone.green{ background:linear-gradient(90deg, rgba(52,211,153,0.4), rgba(52,211,153,0.75)); }
-  .gauge-needle{ position:absolute; top:-6px; bottom:-6px; width:4px; margin-left:-2px; background:#fff; border-radius:2px; box-shadow:0 0 0 3px rgba(255,255,255,0.15), 0 0 10px rgba(255,255,255,0.5); }
+  .gauge-needle{ position:absolute; top:-6px; bottom:-6px; width:4px; margin-left:-2px; background:#fff; border-radius:2px; box-shadow:none; }
   .gauge-scale-labels{ display:flex; justify-content:space-between; font-size:9.5px; color:var(--text-faint); margin:0 4px; }
   .gauge-rationale{ font-size:12.5px; line-height:1.6; color:var(--text-dim); margin:16px 4px 2px; font-family:-apple-system,system-ui,sans-serif; }
   .gauge-rationale b{ color:var(--text); }
@@ -1251,6 +1251,80 @@
   html.phone .sh-stats{ column-gap:12px; }
   html.phone .sh-v2{ font-size:30px !important; }
   html.phone .sh-stats .sh-v{ font-size:30px; }
+
+  /* =========================================================
+     Design polish (Nov 2026): product-card results, refined
+     tabs and top bar, cleaner start screen, subtle motion.
+     ========================================================= */
+  :root{ --ease-out: cubic-bezier(.2,.8,.2,1); --card-bg: linear-gradient(180deg,#20242b 0%,#1b1e24 100%); --card-edge:#2c3139; }
+  /* ---- Top bar ---- */
+  .brand .mark{ font-size:16.5px; letter-spacing:-0.01em; }
+  .topbar-inner{ padding-bottom:12px; }
+  .view-toggle{ height:30px; padding:0 13px !important; border-color:rgba(255,255,255,0.12) !important; background:rgba(255,255,255,0.03) !important;
+    color:var(--text) !important; font-size:12.5px !important; transition:background .2s var(--ease-out), border-color .2s var(--ease-out); }
+  .view-toggle:hover{ background:rgba(255,255,255,0.08) !important; border-color:rgba(255,255,255,0.22) !important; }
+  html.phone .view-toggle{ height:28px; padding:0 10px !important; font-size:12px !important; }
+  /* ---- Tabs ---- */
+  .btab{ height:38px; border-radius:10px 10px 0 0; font-size:13px; transition:background .2s var(--ease-out), color .2s var(--ease-out); }
+  .btab.active{ font-weight:500; }
+  .btab-hover{ inset:5px 3px; border-radius:8px; transition:opacity .2s var(--ease-out); }
+  .btab-dot{ width:7px; height:7px; }
+  .btab-close{ transition:background .15s, color .15s, opacity .15s; }
+  @media (hover:hover){ .btab:not(.active):not(:hover) .btab-close{ opacity:0; } }
+  .btab-new{ transition:background .15s, color .15s; }
+  /* ---- Shared card ---- */
+  .simple-start, html.simple #module1{ background:var(--card-bg) !important; border:1px solid var(--card-edge) !important; border-radius:20px !important;
+    box-shadow:none !important; }
+  /* ---- Start screen ---- */
+  .simple-start{ padding:30px 26px 24px !important; gap:10px; }
+  html.phone .simple-start{ padding:24px 18px 20px !important; border-radius:18px !important; }
+  .ss-pict{ margin-bottom:10px; }
+  .ss-ic{ width:46px !important; height:46px !important; }
+  .ss-ic svg{ width:20px; height:20px; }
+  .ss-cap{ font-size:12.5px !important; color:var(--text-dim) !important; }
+  .ss-arr{ opacity:.55; height:46px !important; }
+  .ss-g + .ss-g{ margin-top:18px; }
+  .ss-lab{ font-size:14px; letter-spacing:-0.005em; }
+  .ss-input, .ss-paste{ border-radius:10px !important; transition:border-color .2s var(--ease-out), box-shadow .2s var(--ease-out); }
+  .ss-input{ height:50px; }
+  .ss-btn{ border-radius:10px !important; height:48px; font-weight:600; transition:background .2s var(--ease-out), transform .12s var(--ease-out), border-color .2s; }
+  .ss-btn:active{ transform:scale(.985); }
+  .ss-fine{ margin-top:16px; }
+  /* ---- Results card ---- */
+  html.simple #module1{ padding:28px 30px 24px !important; margin-top:32px; }
+  html.phone.simple #module1{ padding:20px 16px 18px !important; border-radius:18px !important; margin:22px 0 0 !important; }
+  html.simple #module1 > .panel{ background:none !important; border:0 !important; box-shadow:none !important; padding:0 !important; }
+  .sh-name{ font-size:17px; letter-spacing:-0.01em; }
+  .sh-stats .sh-k{ font-size:11.5px; font-weight:500; letter-spacing:0.06em; text-transform:uppercase; color:var(--text-faint); }
+  .sh-stats .sh-v{ font-family:var(--serif) !important; font-weight:300; font-variant-numeric:tabular-nums; letter-spacing:-0.035em; font-size:48px; line-height:1.05; }
+  html.phone .sh-stats .sh-v, html.phone .sh-v2{ font-size:32px !important; }
+  html.phone .sh-stats .sh-k{ font-size:10.5px; letter-spacing:0.045em; }
+  .sh-sub{ font-size:12.5px; color:var(--text-faint); margin-top:4px; }
+  html.simple .simple-hero{ margin-bottom:0; padding-bottom:22px; border-bottom:1px solid var(--border); }
+  html.simple #module1 .chart-block{ margin-top:20px; }
+  .sh-seg{ padding:3px; margin:18px 0 24px; border-radius:11px; background:#15181d; border-color:#2a2f37; }
+  .sh-seg button{ border-radius:8px; padding:7px 20px; font-size:13px; font-weight:500; transition:background .22s var(--ease-out), color .22s var(--ease-out), box-shadow .22s var(--ease-out); }
+  .sh-seg button[aria-pressed="true"]{ background:#2b3039; box-shadow:none; }
+  html.simple .sc-chip{ transition:background .2s var(--ease-out), border-color .2s var(--ease-out), opacity .2s var(--ease-out), transform .12s var(--ease-out); }
+  html.simple .sc-chip:active{ transform:scale(.97); }
+  .sh-new{ border-radius:10px; white-space:nowrap; flex-shrink:0; }
+  .sh-top{ flex-wrap:wrap; row-gap:12px; }
+  .sh-top .sh-name{ flex:1 1 150px; min-width:0; overflow-wrap:break-word; line-height:1.25; }
+  .sr-warn{ border-radius:12px; }
+  /* ---- Motion ---- */
+  @keyframes shRise{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+  @keyframes shFade{ from{ opacity:0; transform:translateY(4px); } to{ opacity:1; transform:none; } }
+  html.sh-enter.simple #simpleHero{ animation:shRise .42s var(--ease-out) both; }
+  html.sh-enter.simple #revBlock, html.sh-enter.simple #cashBlock{ animation:shRise .46s var(--ease-out) .07s both; }
+  html.sh-enter.simple #shSeg, html.sh-enter.simple #scChips{ animation:shRise .46s var(--ease-out) .14s both; }
+  html.sh-enter.simple #shWarn, html.sh-enter.simple #shFine, html.sh-enter.simple #shCheckRow{ animation:shFade .4s var(--ease-out) .2s both; }
+  html.sh-swap.simple #revBlock, html.sh-swap.simple #cashBlock{ animation:shFade .26s var(--ease-out) both; }
+  html.simple[data-sstep="get"] #simpleStart, html.simple[data-sstep="review"] #simpleReview{ animation:shRise .36s var(--ease-out) both; }
+  html.simple #simpleFigures:not([hidden]){ animation:shFade .28s var(--ease-out) both; }
+  @media (prefers-reduced-motion: reduce){
+    html.sh-enter.simple *, html.sh-swap.simple *, html.simple #simpleStart, html.simple #simpleReview, html.simple #simpleFigures{ animation:none !important; }
+    .ss-btn:active, html.simple .sc-chip:active{ transform:none; }
+  }
   html.phone .simple-start{ margin-top:28px; }
   html.phone .sh-v{ font-size:38px; }
   .mode-toggle{ font-weight:600; }
@@ -4657,11 +4731,33 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     if (step === 'get') simpleSyncStart();
     if (step === 'results') {
       showResults(false);
+      simpleEnterMotion();
       // The charts were drawn while hidden; draw them again now that they have room.
       requestAnimationFrame(function () { recalcAll(); });
       setTimeout(simpleResizeCharts, 800);
     }
     if (scroll !== false) window.scrollTo(0, 0);
+  }
+  var REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Results arrive in a short, staggered rise, and the two big numbers count up once.
+  function simpleEnterMotion() {
+    if (REDUCED) return;
+    var de = document.documentElement;
+    de.classList.remove('sh-enter'); void de.offsetWidth; de.classList.add('sh-enter');
+    clearTimeout(simpleEnterMotion.t); simpleEnterMotion.t = setTimeout(function () { de.classList.remove('sh-enter'); }, 900);
+    simpleCountUp.pending = true;
+  }
+  function simpleCountUp(node, target, fmt) {
+    if (REDUCED || !isFinite(target)) { node.textContent = fmt(target); return; }
+    var t0 = null, dur = 650;
+    cancelAnimationFrame(node._cu);
+    function step(ts) {
+      if (t0 === null) t0 = ts;
+      var k = Math.min(1, (ts - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+      node.textContent = k < 1 ? fmt(target * e) : fmt(target);
+      if (k < 1) node._cu = requestAnimationFrame(step);
+    }
+    node._cu = requestAnimationFrame(step);
   }
   function simpleResizeCharts() { if (window.Chart) Object.keys(Chart.instances).forEach(function (k) { Chart.instances[k].resize(); }); }
   function renderSimpleSteps() {}
@@ -4791,11 +4887,12 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     if (nc) { var full = tabs.length >= MAX_TABS; nc.disabled = full; nc.title = full ? 'Up to ' + MAX_TABS + ' tabs. Close one to add another company.' : 'Open a new tab for another company'; }
     if (!sc || !model || !model.sim) { v.textContent = ''; var f0 = document.getElementById('shFund'); if (f0) { f0.textContent = ''; document.getElementById('shFundSub').textContent = ''; } return; }
     var L = model.sim.labels;
-    v.textContent = fmtBig(sc.totalNet);
+    var animate = simpleCountUp.pending && isSimple(); simpleCountUp.pending = false;
+    if (animate) simpleCountUp(v, sc.totalNet, fmtBig); else { cancelAnimationFrame(v._cu); v.textContent = fmtBig(sc.totalNet); }
     v.classList.toggle('neg', sc.totalNet < 0);
     var fv = document.getElementById('shFund'), fs = document.getElementById('shFundSub');
     if (fv) {
-      fv.textContent = sc.fundingNeed > 0 ? fmtBig(sc.fundingNeed) : 'None';
+      if (sc.fundingNeed > 0 && animate) simpleCountUp(fv, sc.fundingNeed, fmtBig); else { cancelAnimationFrame(fv._cu); fv.textContent = sc.fundingNeed > 0 ? fmtBig(sc.fundingNeed) : 'None'; }
       fv.classList.toggle('warn', sc.fundingNeed > 0);
       fs.textContent = sc.cashOutIdx !== null ? 'Cash runs out in ' + L[sc.cashOutIdx] : 'Cash never runs out';
     }
@@ -4854,6 +4951,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   document.getElementById('shSeg').addEventListener('click', function (e) {
     var b = e.target.closest('[data-schart]'); if (!b) return;
     document.documentElement.setAttribute('data-schart', b.getAttribute('data-schart'));
+    if (!REDUCED) { var de = document.documentElement; de.classList.remove('sh-swap'); void de.offsetWidth; de.classList.add('sh-swap'); clearTimeout(de._sw); de._sw = setTimeout(function () { de.classList.remove('sh-swap'); }, 400); }
     this.querySelectorAll('[data-schart]').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
     setTimeout(simpleResizeCharts, 30);
   });
